@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "module": "esnext",
+    "target": "es2020",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react",
+    "paths": {
+      "@components": ["./components/index.js"],
+      "@hooks": ["./hooks/index.js"],
+      "@pages": ["./pages/index.js"],
+      "@assets/*": ["./assets/*"],
+      "@service": ["./service/index.js"]
+    }
+  },
+  "include": ["./src"]
+}

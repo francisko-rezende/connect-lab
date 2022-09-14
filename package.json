@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "start": "vite build & vite preview",
     "lint": "eslint src/**/*.{js,jsx}",
+    "lint:fix": "eslint src/**/*.{js,jsx} --fix",
     "format": "prettier src/**/*.{js,jsx} --write"
   },
   "dependencies": {
