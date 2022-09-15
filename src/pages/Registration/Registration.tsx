@@ -1,17 +1,79 @@
+// @ts-nocheck
+
 import { FormField } from "@components";
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as S from "./Registration.styles.js";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import "yup-phone";
 
 const onSubmit = (data) => console.log(data);
+
+// {
+//   "email": "usuario@teste.com.br",
+//   "password": "12345678",
+//   "fullName": "Usuaário",
+//   "photoUrl": "",
+//   "phone": "(47) 99999-9999",
+//   "userAddress": {
+//       "zipCode": "85500-000",
+//       "street": "Rua teste",
+//       "number": "4",
+//       "neighborhood": "Bairro XYZ",
+//       "city": "Joinville",
+//       "state": "Santa Catarina",
+//       "complement": "Ap 204"
+//   }
+// }
+
+const errorMessages = {
+  required: "Campo obrigatório",
+  zipCode: "Formato de CEP inválido",
+};
+
+const addressSchema = yup.object({
+  zipCode: yup
+    .string()
+    .matches(/[0-9]{5}-[0-9]{3}/, { message: errorMessages.zipCode })
+    .required(errorMessages.required),
+  street: yup.string().required(errorMessages.required),
+  number: yup.string().required(errorMessages.required),
+  neighborhood: yup.string().required(errorMessages.required),
+  city: yup.string().required(errorMessages.required),
+  state: yup.string().required(errorMessages.required),
+  // complement: yup.string(),
+});
+
+const formSchema = yup.object({
+  email: yup.string().email("Email inválido").required(errorMessages.required),
+  password: yup.string().required(errorMessages.required),
+  confirmPassword: yup
+    .string()
+    .required(errorMessages.required)
+    .oneOf([yup.ref("password"), null], "As senhas devem ser iguais"),
+  fullName: yup.string().required(errorMessages.required),
+  photoUrl: yup.string().url(),
+  phone: yup
+    .string()
+    .phone("BR", true, "Telefone inválido")
+    .required(errorMessages.required),
+  userAddress: addressSchema,
+});
+
+const testSchema = yup.object({
+  fullName: yup.string().required(),
+});
 
 export const Registration = () => {
   const {
     register,
     handleSubmit,
     watch,
+    reset,
+    formState,
     formState: { errors },
-  } = useForm();
+  } = useForm({ resolver: yupResolver(formSchema) });
 
   return (
     <>
@@ -25,13 +87,13 @@ export const Registration = () => {
             id="fullName"
             {...register("fullName")}
           />
-          {errors.fullName && <span>Esse campo é obrigatório</span>}
+          {errors.fullName && <span>{errors.fullName.message}</span>}
         </div>
 
         <div>
           <label htmlFor="email">E-mail*</label>
           <input type="text" name="email" id="email" {...register("email")} />
-          {errors.email && <span>Esse campo é obrigatório</span>}
+          {errors.email && <span>{errors.email.message}</span>}
         </div>
 
         <div>
@@ -45,8 +107,9 @@ export const Registration = () => {
         </div>
 
         <div>
-          <label htmlFor="phone">E-mail*</label>
+          <label htmlFor="phone">Telefone*</label>
           <input type="phone" name="phone" id="phone" {...register("phone")} />
+          {errors.phone && <span>{errors.phone.message}</span>}
         </div>
 
         <div>
@@ -57,16 +120,20 @@ export const Registration = () => {
             id="password"
             {...register("password")}
           />
+          {errors.password && <span>{errors.password.message}</span>}
         </div>
 
         <div>
           <label htmlFor="passwordConfirmation">Confirmação de senha*</label>
           <input
             type="text"
-            name="passwordConfirmation"
-            id="passwordConfirmation"
-            {...register("passwordConfirmation")}
+            name="confirmPassword"
+            id="confirmPassword"
+            {...register("confirmPassword")}
           />
+          {errors.confirmPassword && (
+            <span>{errors.confirmPassword.message}</span>
+          )}
         </div>
 
         <div>
@@ -77,6 +144,9 @@ export const Registration = () => {
             id="zipCode"
             {...register("userAddress.zipCode")}
           />
+          {errors.userAddress?.zipCode?.message && (
+            <span>{errors.userAddress?.zipCode?.message}</span>
+          )}
         </div>
 
         <div>
@@ -87,6 +157,9 @@ export const Registration = () => {
             id="street"
             {...register("userAddress.street")}
           />
+          {errors.userAddress?.street?.message && (
+            <span>{errors.userAddress?.street.message}</span>
+          )}
         </div>
 
         <div>
@@ -97,6 +170,22 @@ export const Registration = () => {
             id="city"
             {...register("userAddress.city")}
           />
+          {errors.userAddress?.city?.message && (
+            <span>{errors.userAddress?.city?.message}</span>
+          )}
+        </div>
+
+        <div>
+          <label htmlFor="state">Estado*</label>
+          <input
+            type="text"
+            name="state"
+            id="state"
+            {...register("userAddress.state")}
+          />
+          {errors.userAddress?.state?.message && (
+            <span>{errors.userAddress?.state?.message}</span>
+          )}
         </div>
 
         <div>
@@ -117,6 +206,9 @@ export const Registration = () => {
             id="number"
             {...register("userAddress.number")}
           />
+          {errors.userAddress?.number?.message && (
+            <span>{errors.userAddress?.number?.message}</span>
+          )}
         </div>
 
         <div>
@@ -127,9 +219,15 @@ export const Registration = () => {
             id="neighborhood"
             {...register("userAddress.neighborhood")}
           />
+          {errors.userAddress?.neighborhood?.message && (
+            <span>{errors.userAddress?.neighborhood?.message}</span>
+          )}
         </div>
 
         <button>Enviar</button>
+        <button type="reset" onClick={() => reset()}>
+          Resetar
+        </button>
         <a href="#">Login</a>
       </S.Form>
     </>
