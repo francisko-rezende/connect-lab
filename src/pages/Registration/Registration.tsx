@@ -32,10 +32,14 @@ const errorMessages = {
   zipCode: "Formato de CEP inválido",
 };
 
+const validatorRegex = {
+  zipCode: /[0-9]{5}-[0-9]{3}/,
+};
+
 const addressSchema = yup.object({
   zipCode: yup
     .string()
-    .matches(/[0-9]{5}-[0-9]{3}/, { message: errorMessages.zipCode })
+    .matches(validatorRegex.zipCode, { message: errorMessages.zipCode })
     .required(errorMessages.required),
   street: yup.string().required(errorMessages.required),
   number: yup.string().required(errorMessages.required),
@@ -61,17 +65,12 @@ const formSchema = yup.object({
   userAddress: addressSchema,
 });
 
-const testSchema = yup.object({
-  fullName: yup.string().required(),
-});
-
 export const Registration = () => {
   const {
     register,
     handleSubmit,
-    watch,
     reset,
-    formState,
+    setValue,
     formState: { errors },
   } = useForm({ resolver: yupResolver(formSchema) });
 
@@ -142,7 +141,23 @@ export const Registration = () => {
             type="text"
             name="zipCode"
             id="zipCode"
-            {...register("userAddress.zipCode")}
+            {...register("userAddress.zipCode", {
+              onBlur: (e) => {
+                const zipCode = e.target.value;
+                const isValidZip = validatorRegex.zipCode.test(zipCode);
+                if (isValidZip) {
+                  const numbersOnlyZip = zipCode.replace(/\D/g, "");
+                  fetch(`https://viacep.com.br/ws/${numbersOnlyZip}/json/`)
+                    .then((response) => response.json())
+                    .then(({ bairro, localidade, logradouro, uf }) => {
+                      setValue("userAddress.neighborhood", bairro);
+                      setValue("userAddress.city", localidade);
+                      setValue("userAddress.street", logradouro);
+                      setValue("userAddress.state", uf);
+                    });
+                }
+              },
+            })}
           />
           {errors.userAddress?.zipCode?.message && (
             <span>{errors.userAddress?.zipCode?.message}</span>
@@ -233,20 +248,3 @@ export const Registration = () => {
     </>
   );
 };
-
-// {
-//   "email": "usuario@teste.com.br",
-//   "password": "12345678",
-//   "fullName": "Usuaário",
-//   "photoUrl": "",
-//   "phone": "(47) 99999-9999",
-//   "userAddress": {
-//       "zipCode": "85500-000",
-//       "street": "Rua teste",
-//       "number": "4",
-//       "neighborhood": "Bairro XYZ",
-//       "city": "Joinville",
-//       "state": "Santa Catarina",
-//       "complement": "Ap 204"
-//   }
-// }
