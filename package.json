@@ -13,10 +13,12 @@
     "format": "prettier src/**/*.{js,jsx} --write"
   },
   "dependencies": {
+    "@hookform/resolvers": "^2.9.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.35.0",
-    "styled-components": "^5.3.5"
+    "styled-components": "^5.3.5",
+    "yup": "^0.32.11"
   },
   "resolutions": {
     "styled-components": "^5"
