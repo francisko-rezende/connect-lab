@@ -12,7 +12,8 @@
       "@hooks": ["./hooks/index.js"],
       "@pages": ["./pages/index.js"],
       "@assets/*": ["./assets/*"],
-      "@service": ["./service/index.js"]
+      "@service": ["./service/index.js"],
+      "@router": ["./router/index.js"]
     }
   },
   "include": ["./src"]
