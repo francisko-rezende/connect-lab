@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { FormField } from "@components";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -30,8 +28,8 @@ const onSubmit = (data) => console.log(data);
 const errorMessages = {
   required: "Campo obrigatório",
   zipCode: "Formato de CEP inválido",
+  url: "Url inválida",
 };
-
 const validatorRegex = {
   zipCode: /[0-9]{5}-[0-9]{3}/,
 };
@@ -42,7 +40,7 @@ const addressSchema = yup.object({
     .matches(validatorRegex.zipCode, { message: errorMessages.zipCode })
     .required(errorMessages.required),
   street: yup.string().required(errorMessages.required),
-  number: yup.string().required(errorMessages.required),
+  number: yup.number().typeError().required(errorMessages.required),
   neighborhood: yup.string().required(errorMessages.required),
   city: yup.string().required(errorMessages.required),
   state: yup.string().required(errorMessages.required),
@@ -57,7 +55,7 @@ const formSchema = yup.object({
     .required(errorMessages.required)
     .oneOf([yup.ref("password"), null], "As senhas devem ser iguais"),
   fullName: yup.string().required(errorMessages.required),
-  photoUrl: yup.string().url(),
+  photoUrl: yup.string().url(errorMessages.url),
   phone: yup
     .string()
     .phone("BR", true, "Telefone inválido")
@@ -103,6 +101,7 @@ export const Registration = () => {
             id="photoUrl"
             {...register("photoUrl")}
           />
+          {errors.photoUrl && <span>{errors.photoUrl.message}</span>}
         </div>
 
         <div>
