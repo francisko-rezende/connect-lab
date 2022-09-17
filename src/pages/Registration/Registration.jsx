@@ -29,6 +29,8 @@ const errorMessages = {
   required: "Campo obrigatório",
   zipCode: "Formato de CEP inválido",
   url: "Url inválida",
+  minCharNum: (field, min) =>
+    `O campo ${field} precisa ter pelo menos ${min} caracteres`,
 };
 const validatorRegex = {
   zipCode: /[0-9]{5}-[0-9]{3}/,
@@ -49,7 +51,7 @@ const addressSchema = yup.object({
 
 const formSchema = yup.object({
   email: yup.string().email("Email inválido").required(errorMessages.required),
-  password: yup.string().required(errorMessages.required),
+  password: yup.string().min(8, errorMessages.minCharNum('"senha"', 8)),
   confirmPassword: yup
     .string()
     .required(errorMessages.required)
@@ -71,6 +73,8 @@ export const Registration = () => {
     setValue,
     formState: { errors },
   } = useForm({ resolver: yupResolver(formSchema) });
+
+  console.log(errors);
 
   return (
     <>
