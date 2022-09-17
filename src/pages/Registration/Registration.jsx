@@ -5,6 +5,7 @@ import * as S from "./Registration.styles.js";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import "yup-phone";
+import { Link } from "react-router-dom";
 
 const onSubmit = (data) => console.log(data);
 
@@ -246,7 +247,7 @@ export const Registration = () => {
         <button type="reset" onClick={() => reset()}>
           Resetar
         </button>
-        <a href="#">Login</a>
+        <Link to={"/"}>Login</Link>
       </S.Form>
     </>
   );
