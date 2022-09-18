@@ -1,13 +1,12 @@
 import { FormField } from "@components";
-import React from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as S from "./Registration.styles.js";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import "yup-phone";
 import { Link } from "react-router-dom";
-
-const onSubmit = (data) => console.log(data);
+import { axiosInstance } from "@lib/axios";
 
 // {
 //   "email": "usuario@teste.com.br",
@@ -75,10 +74,23 @@ export const Registration = () => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(formSchema) });
 
+  const [registrationResult, setRegistrationResult] = useState("");
+
+  const handleRegisterUser = async (data) => {
+    try {
+      const res = await axiosInstance.post("/auth/register", data);
+      console.log(res);
+      setRegistrationResult("Usuário cadastrado com sucesso");
+    } catch (error) {
+      const errorMessage = error.response.data.error;
+      setRegistrationResult(`Houve um erro: ${errorMessage}`);
+    }
+  };
+
   return (
     <>
       <h2>Cadastrar</h2>
-      <S.Form onSubmit={handleSubmit(onSubmit)}>
+      <S.Form onSubmit={handleSubmit(handleRegisterUser)}>
         <div>
           <label htmlFor="fullName">Nome completo*</label>
           <input
@@ -246,6 +258,7 @@ export const Registration = () => {
           Resetar
         </button>
         <Link to={"/"}>Login</Link>
+        {registrationResult && <p>{registrationResult}</p>}
       </S.Form>
     </>
   );
