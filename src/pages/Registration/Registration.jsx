@@ -32,7 +32,7 @@ export const errorMessages = {
   minCharNum: (field, min) =>
     `O campo ${field} precisa ter pelo menos ${min} caracteres`,
 };
-const validatorRegex = {
+export const validatorRegex = {
   zipCode: /[0-9]{5}-[0-9]{3}/,
 };
 
@@ -49,7 +49,7 @@ const addressSchema = yup.object({
   // complement: yup.string(),
 });
 
-const formSchema = yup.object({
+export const formSchema = yup.object({
   email: yup.string().email("Email inválido").required(errorMessages.required),
   password: yup.string().min(8, errorMessages.minCharNum('"senha"', 8)),
   confirmPassword: yup
