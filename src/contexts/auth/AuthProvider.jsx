@@ -1,16 +1,13 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { AuthContext } from "./AuthContext";
+import { useSessionStorage } from "@hooks";
 
 export const AuthProvider = ({ children }) => {
-  const [hasSignedIn, setHasSignedIn] = useState(false);
-
-  const toggleSignedIn = () => {
-    setHasSignedIn((hasSignedIn) => !hasSignedIn);
-  };
+  const [token, setToken] = useSessionStorage("token", null);
 
   return (
-    <AuthContext.Provider value={{ hasSignedIn, toggleSignedIn }}>
+    <AuthContext.Provider value={{ token, setToken }}>
       {children}
     </AuthContext.Provider>
   );
