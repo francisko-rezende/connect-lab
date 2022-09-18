@@ -14,6 +14,8 @@ export default defineConfig({
       "@assets": path.resolve(__dirname, "./src/assets/*"),
       "@service": path.resolve(__dirname, "./src/service/index.js"),
       "@router": path.resolve(__dirname, "./src/router/index.js"),
+      "@config": path.resolve(__dirname, "./src/config/index.js"),
+      "@lib/axios": path.resolve(__dirname, "./src/lib/axios/axiosInstance.js"),
       "@contexts": path.resolve(__dirname, "./src/contexts/index.js"),
     },
   },

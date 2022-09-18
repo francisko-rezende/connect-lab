@@ -14,6 +14,8 @@
       "@assets/*": ["./assets/*"],
       "@service": ["./service/index.js"],
       "@router": ["./router/index.js"],
+      "@config": ["./config/index.js"],
+      "@lib/axios": ["./lib/axios/axiosInstance.js"],
       "@contexts": ["./contexts/index.js"]
     }
   },
