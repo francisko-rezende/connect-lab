@@ -21,6 +21,15 @@ export const Home = () => {
     );
   }, []);
 
+  console.log(userDevices);
+
+  const toggleDeviceStatus = async (id, deviceStatus) => {
+    console.log(!deviceStatus, id);
+    const res = await axiosInstance.put(`/userDevices/${id}`, {
+      is_on: !deviceStatus,
+    });
+  };
+
   return (
     <>
       <div>
@@ -30,9 +39,12 @@ export const Home = () => {
       </div>
       <ul>
         {userDevices &&
-          userDevices.map(({ device: { name, _id }, is_on }) => (
+          userDevices.map(({ device: { name }, is_on, _id }) => (
             <li key={_id}>
               {name} / tá on? {is_on ? "Sim" : "Nada"}
+              <button onClick={() => toggleDeviceStatus(_id, is_on)}>
+                {is_on ? "Desliga" : "Liga"}
+              </button>
             </li>
           ))}
         {/* <button onClick={getUserDevices}>Devices do usuário</button> */}
