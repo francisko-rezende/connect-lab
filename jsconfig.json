@@ -13,7 +13,8 @@
       "@pages": ["./pages/index.js"],
       "@assets/*": ["./assets/*"],
       "@service": ["./service/index.js"],
-      "@router": ["./router/index.js"]
+      "@router": ["./router/index.js"],
+      "@contexts": ["./contexts/index.js"]
     }
   },
   "include": ["./src"]
