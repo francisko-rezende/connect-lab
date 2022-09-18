@@ -206,7 +206,7 @@ export const Profile = () => {
           )}
         </div>
 
-        <button>Enviar</button>
+        <button>Salvar</button>
         <button type="reset" onClick={() => reset()}>
           Resetar
         </button>
