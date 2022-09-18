@@ -2,23 +2,6 @@ import { Devices, Home, Login, Profile, Registration } from "@pages";
 import { Route, Routes } from "react-router-dom";
 import { ProtectedRoute } from "./ProtectedRoute";
 
-// export const router = createBrowserRouter([
-//   {
-//     path: "/",
-//     element: <Root />,
-//     children: [
-//       {
-//         path: "/registro",
-//         element: <Registration />,
-//       },
-//       {
-//         path: "/login",
-//         element: <Login />,
-//       },
-//     ],
-//   },
-// ]);
-
 export const Router = () => (
   <Routes>
     <Route path="/login" element={<Login />} />
