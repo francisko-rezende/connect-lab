@@ -139,7 +139,7 @@ export const Registration = () => {
         <div>
           <label htmlFor="passwordConfirmation">Confirmação de senha*</label>
           <input
-            type="text"
+            type="password"
             name="confirmPassword"
             id="confirmPassword"
             {...register("confirmPassword")}
