@@ -2,15 +2,13 @@ import { useNavigate } from "react-router-dom";
 import { Router } from "@router";
 import { useAuth } from "@hooks";
 function App() {
-  const { hasSignedIn, toggleSignedIn } = useAuth();
   const navigate = useNavigate();
+  const { token } = useAuth();
+
   return (
     <>
       <header>
-        {hasSignedIn ? "Tá logado" : "Não tá ligado"}
-        <button onClick={toggleSignedIn}>
-          {hasSignedIn ? "Deslogar" : "Logar"}
-        </button>
+        {token ? "Tá logado" : "Não tá ligado"}
         <button onClick={() => navigate("/")}>ir pra home</button>
         <nav>
           <h1>Título</h1>
