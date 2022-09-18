@@ -26,7 +26,7 @@ const onSubmit = (data) => console.log(data);
 //   }
 // }
 
-const errorMessages = {
+export const errorMessages = {
   required: "Campo obrigatório",
   zipCode: "Formato de CEP inválido",
   url: "Url inválida",
