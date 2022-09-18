@@ -75,8 +75,6 @@ export const Registration = () => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(formSchema) });
 
-  console.log(errors);
-
   return (
     <>
       <h2>Cadastrar</h2>
