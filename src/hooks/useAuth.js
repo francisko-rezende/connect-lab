@@ -2,7 +2,7 @@ import { AuthContext } from "@contexts";
 import { useContext, useState } from "react";
 
 export const useAuth = () => {
-  const { hasSignedIn, toggleSignedIn } = useContext(AuthContext);
+  const { token, setToken } = useContext(AuthContext);
 
-  return { hasSignedIn, toggleSignedIn };
+  return { token, setToken };
 };
