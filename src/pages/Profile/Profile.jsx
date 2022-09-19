@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { formSchema, validatorRegex } from "../Registration/Registration";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { axiosInstance } from "@lib/axios";
 
 export const Profile = () => {
@@ -19,17 +19,22 @@ export const Profile = () => {
     return res;
   };
 
+  const [user, setUser] = useState({});
+
   useEffect(() => {
-    getUser("632729c69bc4141442d087fa").then(({ data }) => {
-      setValue("fullName", data.fullName);
-      setValue("photoUrl", data.photoUrl);
-      setValue("email", data.email);
-      setValue("password", data.password);
-      setValue("phone", data.phone);
-      setValue("userAddress", data.userAddress);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    getUser("632729c69bc4141442d087fa").then(({ data }) => setUser(data));
   }, []);
+
+  console.log(user);
+
+  useEffect(() => {
+    setValue("fullName", user.fullName);
+    setValue("photoUrl", user.photoUrl);
+    setValue("email", user.email);
+    setValue("password", user.password);
+    setValue("phone", user.phone);
+    setValue("userAddress", user.userAddress);
+  }, [setValue, user]);
 
   const handleUpdateUserInfo = async (data) => {
     const res = await axiosInstance.put(
@@ -39,10 +44,24 @@ export const Profile = () => {
     console.log(res);
     reset();
   };
-
   return (
     <>
       <h1>Profile</h1>
+      {user.email && (
+        <div>
+          <img src={user.photoUrl} alt="Foto" />
+          <h2>{user.fullName}</h2>
+          <p>{user.email}</p>
+          <p>{user.phone}</p>
+          <div>Endereço</div>
+          <p>
+            {user.userAddress.zipCode} {user.userAddress.street} -{" "}
+            {user.userAddress.complement} - {user.userAddress.neighborhood} -{" "}
+            {user.userAddress.city} - {user.userAddress.state}
+          </p>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit(handleUpdateUserInfo)}>
         <div>
           <label htmlFor="fullName">Nome completo*</label>
