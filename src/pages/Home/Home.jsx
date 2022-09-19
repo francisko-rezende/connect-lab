@@ -21,13 +21,15 @@ export const Home = () => {
     );
   }, []);
 
-  console.log(userDevices);
-
   const toggleDeviceStatus = async (id, deviceStatus) => {
     console.log(!deviceStatus, id);
     const res = await axiosInstance.put(`/userDevices/${id}`, {
       is_on: !deviceStatus,
     });
+  };
+
+  const removeDevice = (id) => {
+    axiosInstance.delete(`/userDevices/${id}`);
   };
 
   return (
@@ -45,9 +47,17 @@ export const Home = () => {
               <button onClick={() => toggleDeviceStatus(_id, is_on)}>
                 {is_on ? "Desliga" : "Liga"}
               </button>
+              <button onClick={() => removeDevice(_id)}>Remover</button>
             </li>
           ))}
-        {/* <button onClick={getUserDevices}>Devices do usuário</button> */}
+        <button
+          onClick={async () => {
+            const res = await axiosInstance.get("/locals");
+            console.log(res);
+          }}
+        >
+          Devices do usuário
+        </button>
       </ul>
     </>
   );
