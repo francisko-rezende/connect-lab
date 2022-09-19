@@ -1,3 +1,4 @@
+export { EditProfile } from "./EditProfile";
 export { Home } from "./Home";
 export { Profile } from "./Profile";
 export { Devices } from "./Devices";
