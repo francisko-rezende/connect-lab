@@ -1,4 +1,3 @@
-import { FormField } from "@components";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as S from "./Registration.styles.js";
@@ -29,7 +28,7 @@ export const errorMessages = {
   required: "Campo obrigatório",
   zipCode: "Formato de CEP inválido",
   url: "Url inválida",
-  minCharNum: (field, min) =>
+  getMinCharNumMessage: (field, min) =>
     `O campo ${field} precisa ter pelo menos ${min} caracteres`,
 };
 export const validatorRegex = {
@@ -51,7 +50,9 @@ const addressSchema = yup.object({
 
 export const formSchema = yup.object({
   email: yup.string().email("Email inválido").required(errorMessages.required),
-  password: yup.string().min(8, errorMessages.minCharNum('"senha"', 8)),
+  password: yup
+    .string()
+    .min(8, errorMessages.getMinCharNumMessage('"senha"', 8)),
   confirmPassword: yup
     .string()
     .required(errorMessages.required)
