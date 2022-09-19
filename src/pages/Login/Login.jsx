@@ -10,7 +10,9 @@ import { useAuth } from "@hooks";
 
 const userSchema = yup.object({
   email: yup.string().email("E-mail inválido").required(errorMessages.required),
-  password: yup.string().min(8, errorMessages.minCharNum('"senha"', 8)),
+  password: yup
+    .string()
+    .min(8, errorMessages.getMinCharNumMessage('"senha"', 8)),
 });
 
 export const Login = () => {
