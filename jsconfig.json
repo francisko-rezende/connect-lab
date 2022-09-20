@@ -15,7 +15,7 @@
       "@service": ["./service/index.js"],
       "@router": ["./router/index.js"],
       "@config": ["./config/index.js"],
-      "@lib/axios": ["./lib/axios/axiosInstance.js"],
+      "@lib/axios": ["./lib/axiosInstance.js"],
       "@contexts": ["./contexts/index.js"]
     }
   },
