@@ -16,6 +16,7 @@ export default defineConfig({
       "@router": path.resolve(__dirname, "./src/router/index.js"),
       "@config": path.resolve(__dirname, "./src/config/index.js"),
       "@lib/axios": path.resolve(__dirname, "./src/lib/axios.js"),
+      "@lib/react-query": path.resolve(__dirname, "./src/lib/react-query.js"),
       "@contexts": path.resolve(__dirname, "./src/contexts/index.js"),
     },
   },

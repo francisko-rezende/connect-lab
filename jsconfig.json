@@ -16,6 +16,7 @@
       "@router": ["./router/index.js"],
       "@config": ["./config/index.js"],
       "@lib/axios": ["./lib/axios.js"],
+      "@lib/react-query": ["./lib/react-query.js"],
       "@contexts": ["./contexts/index.js"]
     }
   },
