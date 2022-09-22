@@ -7,6 +7,7 @@ import { errorMessages } from "../../pages/Registration/Registration";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useAuth } from "@hooks";
+import { queryClient } from "@lib/react-query";
 
 const userSchema = yup.object({
   email: yup.string().email("E-mail inválido").required(errorMessages.required),
@@ -29,6 +30,7 @@ export const Login = () => {
   const handleLogin = async (data) => {
     try {
       const res = await axiosInstance.post("/auth/login", data);
+      queryClient.setQueryData("user", res.data.user);
       const token = res.data.token;
       setToken(token);
       navigate("/");
