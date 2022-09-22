@@ -2,8 +2,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { formSchema, validatorRegex } from "../Registration/Registration";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { axiosInstance } from "@lib/axios";
+import { useEffect } from "react";
+import { queryClient } from "@lib/react-query";
+import { useUpdateProfile, useUser } from "@hooks";
 
 export const Profile = () => {
   const {
@@ -12,20 +13,11 @@ export const Profile = () => {
     reset,
     setValue,
     formState: { errors },
-  } = useForm(/* { resolver: yupResolver(formSchema) } */);
+  } = useForm({ resolver: yupResolver(formSchema) });
 
-  const getUser = async (id) => {
-    const res = await axiosInstance.get(`/users/${id}`);
-    return res;
-  };
+  const user = queryClient.getQueryData("user");
 
-  const [user, setUser] = useState({});
-
-  useEffect(() => {
-    getUser("632729c69bc4141442d087fa").then(({ data }) => setUser(data));
-  }, []);
-
-  console.log(user);
+  const userQuery = useUser(user._id);
 
   useEffect(() => {
     setValue("fullName", user.fullName);
@@ -34,15 +26,12 @@ export const Profile = () => {
     setValue("password", user.password);
     setValue("phone", user.phone);
     setValue("userAddress", user.userAddress);
-  }, [setValue, user]);
+  }, []);
+
+  const updateProfile = useUpdateProfile();
 
   const handleUpdateUserInfo = async (data) => {
-    const res = await axiosInstance.put(
-      `/users/${"632729c69bc4141442d087fa"}`,
-      data,
-    );
-    console.log(res);
-    reset();
+    updateProfile.mutate({ userId: user._id, data });
   };
   return (
     <>
