@@ -1,3 +1,4 @@
+export { useGlobalContext } from "./useGlobalContext";
 export { useAddUserDevice } from "./useAddUserDevice";
 export { useRegisteredDevices } from "./useRegisteredDevices";
 export { useUser } from "./useUser";
