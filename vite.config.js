@@ -15,8 +15,10 @@ export default defineConfig({
       "@service": path.resolve(__dirname, "./src/service/index.js"),
       "@router": path.resolve(__dirname, "./src/router/index.js"),
       "@config": path.resolve(__dirname, "./src/config/index.js"),
-      "@lib/axios": path.resolve(__dirname, "./src/lib/axios/axiosInstance.js"),
+      "@lib/axios": path.resolve(__dirname, "./src/lib/axios.js"),
+      "@lib/react-query": path.resolve(__dirname, "./src/lib/react-query.js"),
       "@contexts": path.resolve(__dirname, "./src/contexts/index.js"),
+      "@api": path.resolve(__dirname, "./src/api/index.js"),
     },
   },
 });

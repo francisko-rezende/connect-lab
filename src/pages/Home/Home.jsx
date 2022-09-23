@@ -1,36 +1,28 @@
 /* eslint-disable camelcase */
+import { getRegisteredDevices, getUser } from "@api";
+import {
+  useUserDevices,
+  useRemoveUserDevice,
+  useToggleDeviceStatus,
+  useGlobalContext,
+} from "@hooks";
 import { axiosInstance } from "@lib/axios";
-import { useEffect, useState } from "react";
+import { queryClient } from "@lib/react-query";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 export const Home = () => {
-  // const getUser = async () => {
-  //   const res = await axiosInstance.get(`/users/631b6e3e61ef65fb3859152f`);
-  // };
+  const { userId } = useGlobalContext();
 
-  const [userDevices, setUserDevices] = useState(null);
+  const { userDevicesQuery } = useUserDevices(userId);
 
-  const getUserDevices = async (id) => {
-    const res = await axiosInstance.get(`/userDevices/user/${id}`);
-    return res;
-  };
+  const removeDevice = useRemoveUserDevice();
+  const toggleDeviceStatus = useToggleDeviceStatus();
 
   useEffect(() => {
-    getUserDevices("632729c69bc4141442d087fa").then((res) =>
-      setUserDevices(res.data),
-    );
-  }, []);
-
-  const toggleDeviceStatus = async (id, deviceStatus) => {
-    console.log(!deviceStatus, id);
-    const res = await axiosInstance.put(`/userDevices/${id}`, {
-      is_on: !deviceStatus,
-    });
-  };
-
-  const removeDevice = (id) => {
-    axiosInstance.delete(`/userDevices/${id}`);
-  };
+    queryClient.prefetchQuery("registeredDevices", getRegisteredDevices);
+    queryClient.prefetchQuery("user", () => getUser(userId));
+  }, [userId]);
 
   return (
     <>
@@ -40,19 +32,34 @@ export const Home = () => {
         <Link to={"perfil"}>Perfil</Link>
       </div>
       <ul>
-        {userDevices &&
-          userDevices.map(({ device: { name }, is_on, _id }) => (
-            <li key={_id}>
-              {name} / tá on? {is_on ? "Sim" : "Nada"}
-              <button onClick={() => toggleDeviceStatus(_id, is_on)}>
-                {is_on ? "Desliga" : "Liga"}
-              </button>
-              <button onClick={() => removeDevice(_id)}>Remover</button>
-            </li>
-          ))}
+        {userDevicesQuery.isLoading ? (
+          <p>Loading...</p>
+        ) : (
+          userDevicesQuery.data.map(({ device: { name }, is_on, _id }) => {
+            return (
+              <li key={_id}>
+                {name} / tá on? {is_on ? "Sim" : "Nada"}
+                <button
+                  onClick={() => {
+                    toggleDeviceStatus.mutate({
+                      deviceId: _id,
+                      deviceStatus: is_on,
+                    });
+                  }}
+                >
+                  {is_on ? "Desliga" : "Liga"}
+                </button>
+                <button onClick={() => removeDevice.mutate(_id)}>
+                  Remover
+                </button>
+              </li>
+            );
+          })
+        )}
         <button
           onClick={async () => {
             const res = await axiosInstance.get("/locals");
+
             console.log(res);
           }}
         >

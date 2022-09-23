@@ -1,2 +1,2 @@
-export { AuthContext } from "./auth";
-export { AuthProvider } from "./auth";
+export { GlobalContext, GlobalProvider } from "./global";
+export { AuthContext, AuthProvider } from "./auth";

@@ -15,8 +15,10 @@
       "@service": ["./service/index.js"],
       "@router": ["./router/index.js"],
       "@config": ["./config/index.js"],
-      "@lib/axios": ["./lib/axios/axiosInstance.js"],
-      "@contexts": ["./contexts/index.js"]
+      "@lib/axios": ["./lib/axios.js"],
+      "@lib/react-query": ["./lib/react-query.js"],
+      "@contexts": ["./contexts/index.js"],
+      "@api": ["./api/index.js"]
     }
   },
   "include": ["./src"]
