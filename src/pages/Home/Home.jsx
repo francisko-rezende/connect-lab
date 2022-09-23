@@ -1,9 +1,10 @@
 /* eslint-disable camelcase */
-import { getRegisteredDevices } from "@api";
+import { getRegisteredDevices, getUser } from "@api";
 import {
   useUserDevices,
   useRemoveUserDevice,
   useToggleDeviceStatus,
+  useGlobalContext,
 } from "@hooks";
 import { axiosInstance } from "@lib/axios";
 import { queryClient } from "@lib/react-query";
@@ -11,7 +12,8 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 export const Home = () => {
-  const userId = queryClient.getQueryData("user")._id;
+  const { userId } = useGlobalContext();
+
   const { userDevicesQuery } = useUserDevices(userId);
 
   const removeDevice = useRemoveUserDevice();
@@ -19,7 +21,8 @@ export const Home = () => {
 
   useEffect(() => {
     queryClient.prefetchQuery("registeredDevices", getRegisteredDevices);
-  }, []);
+    queryClient.prefetchQuery("user", () => getUser(userId));
+  }, [userId]);
 
   return (
     <>
