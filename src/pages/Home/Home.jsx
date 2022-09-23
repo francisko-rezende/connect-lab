@@ -23,6 +23,7 @@ export const Home = () => {
   useEffect(() => {
     queryClient.prefetchQuery("registeredDevices", getRegisteredDevices);
     queryClient.prefetchQuery("user", () => getUser(userId));
+    queryClient.prefetchQuery("locations");
   }, [userId]);
 
   return (
@@ -60,8 +61,6 @@ export const Home = () => {
         <button
           onClick={async () => {
             const res = await axiosInstance.get("/locals");
-
-            console.log(res);
           }}
         >
           Devices do usuário
