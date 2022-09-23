@@ -5,6 +5,7 @@ import {
   useRemoveUserDevice,
   useToggleDeviceStatus,
   useGlobalContext,
+  useCheckToken,
 } from "@hooks";
 import { axiosInstance } from "@lib/axios";
 import { queryClient } from "@lib/react-query";
@@ -15,7 +16,7 @@ export const Home = () => {
   const { userId } = useGlobalContext();
 
   const { userDevicesQuery } = useUserDevices(userId);
-
+  useCheckToken();
   const removeDevice = useRemoveUserDevice();
   const toggleDeviceStatus = useToggleDeviceStatus();
 
