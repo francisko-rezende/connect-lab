@@ -3,8 +3,14 @@ import { formSchema, validatorRegex } from "../Registration/Registration";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
-import { queryClient } from "@lib/react-query";
-import { useGlobalContext, useUpdateProfile, useUser } from "@hooks";
+import {
+  useCheckToken,
+  useGlobalContext,
+  useUpdateProfile,
+  useUser,
+} from "@hooks";
+
+// todo create schema for update form
 
 export const Profile = () => {
   const {
@@ -14,6 +20,8 @@ export const Profile = () => {
     setValue,
     formState: { errors },
   } = useForm();
+
+  useCheckToken();
 
   const { userId } = useGlobalContext();
 

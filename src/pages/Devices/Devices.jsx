@@ -1,5 +1,6 @@
 import {
   useAddUserDevice,
+  useCheckToken,
   useGlobalContext,
   useRegisteredDevices,
   useUserDevices,
@@ -10,6 +11,7 @@ export const Devices = () => {
   const addUserDevice = useAddUserDevice();
   const { userId } = useGlobalContext();
   useUserDevices(userId);
+  useCheckToken();
 
   return (
     <>
