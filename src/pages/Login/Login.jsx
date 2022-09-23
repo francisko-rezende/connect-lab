@@ -6,7 +6,7 @@ import * as yup from "yup";
 import { errorMessages } from "../../pages/Registration/Registration";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { useAuth } from "@hooks";
+import { useAuth, useGlobalContext } from "@hooks";
 import { queryClient } from "@lib/react-query";
 
 const userSchema = yup.object({
@@ -24,6 +24,7 @@ export const Login = () => {
   } = useForm({ resolver: yupResolver(userSchema) });
   const { setToken } = useAuth();
   const navigate = useNavigate();
+  const { setUserId } = useGlobalContext();
 
   const [error, setError] = useState("");
 
@@ -31,6 +32,7 @@ export const Login = () => {
     try {
       const res = await axiosInstance.post("/auth/login", data);
       queryClient.setQueryData("user", res.data.user);
+      setUserId(res.data.user._id);
       const token = res.data.token;
       setToken(token);
       navigate("/");
