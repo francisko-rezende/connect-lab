@@ -7,10 +7,11 @@ import {
   useGlobalContext,
   useCheckToken,
 } from "@hooks";
-import { axiosInstance } from "@lib/axios";
 import { queryClient } from "@lib/react-query";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
+
+// todo add weather widget
 
 export const Home = () => {
   const { userId } = useGlobalContext();
@@ -23,7 +24,6 @@ export const Home = () => {
   useEffect(() => {
     queryClient.prefetchQuery("registeredDevices", getRegisteredDevices);
     queryClient.prefetchQuery("user", () => getUser(userId));
-    queryClient.prefetchQuery("locations");
   }, [userId]);
 
   return (
@@ -58,13 +58,6 @@ export const Home = () => {
             );
           })
         )}
-        <button
-          onClick={async () => {
-            const res = await axiosInstance.get("/locals");
-          }}
-        >
-          Devices do usuário
-        </button>
       </ul>
     </>
   );
