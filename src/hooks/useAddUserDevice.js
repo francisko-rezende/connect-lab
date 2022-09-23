@@ -4,8 +4,8 @@ import { useMutation } from "react-query";
 
 export const useAddUserDevice = () => {
   const mutation = useMutation(
-    ({ userId, deviceId, locationId, room }) =>
-      addUserDevice(userId, deviceId, locationId, room),
+    ({ userId, deviceId, location, room }) =>
+      addUserDevice(userId, deviceId, location, room),
     {
       onSuccess: () => {
         queryClient.invalidateQueries("userDevices");

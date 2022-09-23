@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import { Link, useNavigate } from "react-router-dom";
 import { axiosInstance } from "@lib/axios";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -7,7 +6,9 @@ import { errorMessages } from "../../pages/Registration/Registration";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useAuth, useGlobalContext } from "@hooks";
-import { queryClient } from "@lib/react-query";
+
+// todo validate all fields
+// todo use react-query to get address from zipcode
 
 const userSchema = yup.object({
   email: yup.string().email("E-mail inválido").required(errorMessages.required),
@@ -31,7 +32,6 @@ export const Login = () => {
   const handleLogin = async (data) => {
     try {
       const res = await axiosInstance.post("/auth/login", data);
-      queryClient.setQueryData("user", res.data.user);
       setUserId(res.data.user._id);
       const token = res.data.token;
       setToken(token);
@@ -69,5 +69,3 @@ export const Login = () => {
     </>
   );
 };
-
-Login.propTypes = {};
