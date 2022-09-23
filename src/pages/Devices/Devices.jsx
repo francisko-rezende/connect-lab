@@ -1,3 +1,4 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import {
   useAddUserDevice,
   useCheckToken,
@@ -6,7 +7,13 @@ import {
   useRegisteredDevices,
   useUserDevices,
 } from "@hooks";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+
+const newUserDeviceSchema = yup.object({
+  room: yup.string().required("Campo obrigatório"),
+  location: yup.string().required("Campo obrigatório"),
+});
 
 export const Devices = () => {
   const devices = useRegisteredDevices();
@@ -14,9 +21,16 @@ export const Devices = () => {
   const { userId } = useGlobalContext();
   useUserDevices(userId);
   useCheckToken();
-  const [locationId, setLocationId] = useState(null);
-  const [room, setRoom] = useState(null);
   const locations = useLocationOptions();
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(newUserDeviceSchema) });
+
+  setValue("userId", userId);
 
   // todo location select input
 
@@ -30,35 +44,33 @@ export const Devices = () => {
               <li key={_id}>
                 {name}{" "}
                 <button
-                  onClick={() =>
-                    addUserDevice.mutate({
-                      userId,
-                      deviceId: _id,
-                      locationId,
-                      room,
-                    })
-                  }
+                  onClick={() => {
+                    setValue("deviceId", _id);
+                  }}
                 >
                   Adicionar
                 </button>
               </li>
             ))}
       </ul>
-      <form>
+
+      <form onSubmit={handleSubmit((data) => addUserDevice.mutate(data))}>
+        <input {...register("userId")} style={{ display: "none" }} />
+        <input {...register("deviceId")} style={{ display: "none" }} />
+
         <label htmlFor="room">Quarto</label>
-        <input
-          type="text"
-          name="room"
-          id="room"
-          onChange={(ev) => setRoom(ev.target.value)}
-        />
+        <input type="text" name="room" id="room" {...register("room")} />
 
         <label htmlFor="location">Local</label>
         <select
+          defaultValue={""}
           name="location"
           id="location"
-          onChange={(e) => setLocationId(e.target.value)}
+          {...register("location")}
         >
+          <option value="" disabled>
+            Selecione o local
+          </option>
           {!locations.isLoading &&
             locations.data.map((location) => (
               <option key={location._id} value={location._id}>
@@ -66,6 +78,7 @@ export const Devices = () => {
               </option>
             ))}
         </select>
+        <button>Submeter</button>
       </form>
     </>
   );
