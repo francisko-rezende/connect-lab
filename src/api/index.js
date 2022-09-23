@@ -1,3 +1,4 @@
+export { getLocationOptions } from "./getLocationOptions";
 export { updateProfile } from "./updateProfile";
 export { toggleDeviceStatus } from "./toggleDeviceStatus";
 export { addUserDevice } from "./addUserDevice";
