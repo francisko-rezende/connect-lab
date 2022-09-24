@@ -17,6 +17,7 @@
       "@config": ["./config/index.js"],
       "@lib/axios": ["./lib/axios.js"],
       "@lib/react-query": ["./lib/react-query.js"],
+      "@lib/yup": ["./lib/yup.js"],
       "@contexts": ["./contexts/index.js"],
       "@api": ["./api/index.js"],
       "@styles": ["./styles/index.js"]
