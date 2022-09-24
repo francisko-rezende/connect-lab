@@ -14,7 +14,7 @@ export const GlobalStyles = createGlobalStyle`
 html, body {
   height: 100%;
   ${({ theme }) => css`
-    background: ${theme.colors.gray.gray01};
+    background: ${theme.colors.gray.gray04};
     color: ${theme.colors.gray.gray12};
   `}
 }
