@@ -2,7 +2,7 @@ import styled, { css } from "styled-components";
 
 export const Header = styled.header`
   ${({ theme }) => css`
-    background: ${theme.colors.gray.gray04};
+    background: ${theme.colors.gray.gray01};
     color: ${theme.colors.main.main12};
   `}
 `;

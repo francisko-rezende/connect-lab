@@ -1,11 +1,17 @@
 import * as S from "./Link.styles";
 import PropTypes from "prop-types";
 
-export const Link = ({ children, to }) => {
-  return <S.Link to={to}>{children}</S.Link>;
+export const Link = ({ children, to, variant, className }) => {
+  return (
+    <S.Link to={to} variant={variant} className={className}>
+      {children}
+    </S.Link>
+  );
 };
 
 Link.propTypes = {
   children: PropTypes.node,
   to: PropTypes.string,
+  variant: PropTypes.string,
+  className: PropTypes.string,
 };

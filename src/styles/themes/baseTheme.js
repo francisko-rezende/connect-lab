@@ -1,5 +1,5 @@
 export const baseTheme = {
-  borderRadius: "4px",
+  borderRadius: "8px",
   font: {
     weight: {
       normal: 400,

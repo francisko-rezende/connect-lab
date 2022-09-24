@@ -2,7 +2,7 @@ import * as S from "./Logo.styles.js";
 
 export const Logo = () => {
   return (
-    <S.StyledLink>
+    <S.StyledLink to="/">
       <svg
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

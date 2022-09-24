@@ -17,6 +17,7 @@ export default defineConfig({
       "@config": path.resolve(__dirname, "./src/config/index.js"),
       "@lib/axios": path.resolve(__dirname, "./src/lib/axios.js"),
       "@lib/react-query": path.resolve(__dirname, "./src/lib/react-query.js"),
+      "@lib/yup": path.resolve(__dirname, "./src/lib/yup.js"),
       "@contexts": path.resolve(__dirname, "./src/contexts/index.js"),
       "@api": path.resolve(__dirname, "./src/api/index.js"),
       "@styles": path.resolve(__dirname, "./src/styles/index.js"),
