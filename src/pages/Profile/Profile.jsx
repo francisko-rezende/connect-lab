@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { formSchema, validatorRegex } from "../Registration/Registration";
+import { formSchema, validatorRegex } from "@lib/yup";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
