@@ -23,6 +23,7 @@ body {
 img, picture, video, canvas, svg {
   display: block;
   max-width: 100%;
+  height: 100%;
 }
 
 input, button, textarea, select {
