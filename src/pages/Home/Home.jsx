@@ -17,10 +17,10 @@ export const Home = () => {
   const { userId } = useGlobalContext();
 
   const userQuery = useUser(userId);
-  const weatherQuery = useWeatherData(userQuery.data?.userAddress?.city);
-  queryClient.setQueryDefaults(["weather", userQuery.data?.userAddress?.city], {
-    enabled: !!userQuery.data?.userAddress?.city,
-  });
+  // const weatherQuery = useWeatherData(userQuery.data?.userAddress?.city);
+  // queryClient.setQueryDefaults(["weather", userQuery.data?.userAddress?.city], {
+  //   enabled: !!userQuery.data?.userAddress?.city,
+  // });
   const { userDevicesQuery } = useUserDevices(userId);
   useCheckToken();
   const removeDevice = useRemoveUserDevice();
@@ -39,7 +39,7 @@ export const Home = () => {
         <Link to={"perfil"}>Perfil</Link>
       </div>
 
-      {!userQuery.isLoading &
+      {/* {!userQuery.isLoading &
         !userQuery.isError &
         !weatherQuery.isLoading &
         !weatherQuery.isError && (
@@ -60,7 +60,7 @@ export const Home = () => {
             Sensação térmica: {Math.round(weatherQuery.data.main.feels_like)}ºC{" "}
           </p>
         </div>
-      )}
+      )} */}
 
       <ul>
         {userDevicesQuery.isLoading ? (
