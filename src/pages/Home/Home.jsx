@@ -1,21 +1,26 @@
 /* eslint-disable camelcase */
-import { getRegisteredDevices, getUser } from "@api";
+import { getRegisteredDevices, getUser, getWeatherData } from "@api";
 import {
   useUserDevices,
   useRemoveUserDevice,
   useToggleDeviceStatus,
   useGlobalContext,
   useCheckToken,
+  useWeatherData,
+  useUser,
 } from "@hooks";
 import { queryClient } from "@lib/react-query";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
-// todo add weather widget
-
 export const Home = () => {
   const { userId } = useGlobalContext();
 
+  const userQuery = useUser(userId);
+  const weatherQuery = useWeatherData(userQuery.data?.userAddress?.city);
+  queryClient.setQueryDefaults(["weather", userQuery.data?.userAddress?.city], {
+    enabled: !!userQuery.data?.userAddress?.city,
+  });
   const { userDevicesQuery } = useUserDevices(userId);
   useCheckToken();
   const removeDevice = useRemoveUserDevice();
@@ -33,6 +38,30 @@ export const Home = () => {
         <Link to={"devices"}>Devices</Link>
         <Link to={"perfil"}>Perfil</Link>
       </div>
+
+      {!userQuery.isLoading &
+        !userQuery.isError &
+        !weatherQuery.isLoading &
+        !weatherQuery.isError && (
+        <div>
+          <p>{Math.round(weatherQuery.data.main.temp)} ºC</p>
+          <p style={{ textTransform: "capitalize" }}>
+            {weatherQuery.data.weather[0].description}
+          </p>
+          <img
+            src={`https://openweathermap.org/img/wn/${weatherQuery.data.weather[0].icon}@2x.png`}
+            alt={`tempo ${weatherQuery.data.weather[0].description}`}
+          />
+          <p>
+            {userQuery.data.userAddress.city},{" "}
+            {userQuery.data.userAddress.state}
+          </p>
+          <p>
+            Sensação térmica: {Math.round(weatherQuery.data.main.feels_like)}ºC{" "}
+          </p>
+        </div>
+      )}
+
       <ul>
         {userDevicesQuery.isLoading ? (
           <p>Loading...</p>

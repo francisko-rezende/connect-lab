@@ -6,6 +6,8 @@ import { errorMessages } from "../../pages/Registration/Registration";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useAuth, useGlobalContext } from "@hooks";
+import { queryClient } from "@lib/react-query";
+import { getUserDevices, getWeatherData } from "@api";
 
 // todo validate all fields
 // todo use react-query to get address from zipcode
@@ -32,9 +34,21 @@ export const Login = () => {
   const handleLogin = async (data) => {
     try {
       const res = await axiosInstance.post("/auth/login", data);
-      setUserId(res.data.user._id);
-      const token = res.data.token;
+
+      const { token, user } = res.data;
+      const userId = user._id;
+      const userCity = user.userAddress.city;
+
+      queryClient.setQueryData("user", user);
+
+      queryClient.prefetchQuery(["weather", userCity], () =>
+        getWeatherData(userCity),
+      );
+      queryClient.prefetchQuery(["useDevices"], () => getUserDevices(userId));
+
+      setUserId(userId);
       setToken(token);
+
       navigate("/");
     } catch (error) {
       setError("Email e/ou senha incorretos");

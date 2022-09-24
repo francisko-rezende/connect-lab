@@ -1,3 +1,4 @@
+export { useWeatherData } from "./useWeatherData";
 export { useLocationOptions } from "./useLocationOptions";
 export { useCheckToken } from "./useCheckToken";
 export { useGlobalContext } from "./useGlobalContext";
