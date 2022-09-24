@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle, css } from "styled-components";
 
 export const GlobalStyles = createGlobalStyle`
  
@@ -13,6 +13,10 @@ export const GlobalStyles = createGlobalStyle`
 
 html, body {
   height: 100%;
+  ${({ theme }) => css`
+    background: ${theme.colors.gray.gray01};
+    color: ${theme.colors.gray.gray12};
+  `}
 }
 
 body {
@@ -23,6 +27,7 @@ body {
 img, picture, video, canvas, svg {
   display: block;
   max-width: 100%;
+  height: 100%;
 }
 
 input, button, textarea, select {
