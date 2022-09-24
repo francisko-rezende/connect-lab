@@ -12,14 +12,23 @@ function App() {
   const currentTheme = theme === "dark" ? darkTheme : lightTheme;
 
   return (
-    <>
-      <ThemeProvider theme={currentTheme}>
+    <ThemeProvider theme={currentTheme}>
+      <div
+        style={{
+          minHeight: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        }}
+      >
         <Header>
-          <Logo as="h1" />
+          <Logo />
           {token && <button onClick={signOut}>Deslogar</button>}
           <button onClick={toggleTheme}>Mudar tema</button>
           <nav>
-            <Link to="/login">Login</Link>
+            <Link to="/login" variant="button">
+              Login
+            </Link>
           </nav>
         </Header>
         <main>
@@ -29,8 +38,8 @@ function App() {
           <p>Feito com 😠 por Francisko</p>
         </footer>
         <GlobalStyles />
-      </ThemeProvider>
-    </>
+      </div>
+    </ThemeProvider>
   );
 }
 
