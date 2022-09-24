@@ -19,6 +19,7 @@ export default defineConfig({
       "@lib/react-query": path.resolve(__dirname, "./src/lib/react-query.js"),
       "@contexts": path.resolve(__dirname, "./src/contexts/index.js"),
       "@api": path.resolve(__dirname, "./src/api/index.js"),
+      "@styles": path.resolve(__dirname, "./src/styles/index.js"),
     },
   },
 });
