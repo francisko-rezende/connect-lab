@@ -8,6 +8,7 @@ export const GlobalStyles = createGlobalStyle`
 
 * {
   margin: 0;
+  font-family: 'IBM Plex Sans', sans-serif;
 }
 
 html, body {
