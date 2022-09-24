@@ -5,9 +5,12 @@ import { useSessionStorage } from "@hooks";
 
 export const GlobalProvider = ({ children }) => {
   const [userId, setUserId] = useSessionStorage("userId", null);
+  const [theme, setTheme] = useSessionStorage("theme", "dark");
+
+  const toggleTheme = (theme) => setTheme(theme === "dark" ? "light" : "dark");
 
   return (
-    <GlobalContext.Provider value={{ userId, setUserId }}>
+    <GlobalContext.Provider value={{ userId, setUserId, theme, toggleTheme }}>
       {children}
     </GlobalContext.Provider>
   );
