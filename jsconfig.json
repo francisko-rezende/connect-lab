@@ -18,7 +18,8 @@
       "@lib/axios": ["./lib/axios.js"],
       "@lib/react-query": ["./lib/react-query.js"],
       "@contexts": ["./contexts/index.js"],
-      "@api": ["./api/index.js"]
+      "@api": ["./api/index.js"],
+      "@styles": ["./styles/index.js"]
     }
   },
   "include": ["./src"]
