@@ -3,15 +3,18 @@ import { formSchema, validatorRegex } from "@lib/yup";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
+import { formatToPhone } from "brazilian-values";
 import {
   useCheckToken,
   useGlobalContext,
   useUpdateProfile,
   useUser,
 } from "@hooks";
-import { Avatar } from "@components";
+import { Button, Container, Link as CustomLink } from "@components";
+import * as S from "./Profile.styles";
 
 // todo create schema for update form
+// todo replace paragraphs with semantic html for address info
 
 export const Profile = () => {
   const {
@@ -39,6 +42,7 @@ export const Profile = () => {
       setValue("phone", user.phone);
       setValue("userAddress", user.userAddress);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userQuery.isLoading]);
 
   const updateProfile = useUpdateProfile();
@@ -48,24 +52,33 @@ export const Profile = () => {
   };
   return (
     <>
-      <h1>Profile</h1>
       {userQuery.isLoading ? (
         <p>Loading...</p>
       ) : (
-        <>
-          <div>
-            <Avatar name={user.fullName} src={user.photoUrl} />
-            {/* <img src={user.photoUrl} alt="Foto" /> */}
-            <h2>{user.fullName}</h2>
-            <p>{user.email}</p>
-            <p>{user.phone}</p>
-            <div>Endereço</div>
-            <p>
-              {user.userAddress.zipCode} {user.userAddress.street} -{" "}
-              {user.userAddress.complement} - {user.userAddress.neighborhood} -{" "}
-              {user.userAddress.city} - {user.userAddress.state}
-            </p>
-          </div>
+        <Container>
+          <S.UserWrapper>
+            <S.H2>Meu Perfil</S.H2>
+            <S.UserInfoWrapper>
+              <S.CustomAvatar name={user.fullName} src={user.photoUrl} />
+              <S.Name>{user.fullName}</S.Name>
+              <S.Email>{user.email}</S.Email>
+              <S.Phone>{formatToPhone(user.phone)}</S.Phone>
+            </S.UserInfoWrapper>
+            <div>
+              <S.H3>Endereço</S.H3>
+              <p>
+                {user.userAddress.zipCode} - {user.userAddress.street} -{" "}
+                {user.userAddress.complement} - {user.userAddress.neighborhood}{" "}
+                - {user.userAddress.city} - {user.userAddress.state}
+              </p>
+            </div>
+            <S.ButtonsWrapper>
+              <CustomLink variant="button" to="">
+                Editar
+              </CustomLink>
+              <Button variant="underlined">Sair</Button>
+            </S.ButtonsWrapper>
+          </S.UserWrapper>
 
           <form onSubmit={handleSubmit(handleUpdateUserInfo)}>
             <div>
@@ -211,7 +224,7 @@ export const Profile = () => {
             </button>
             <Link to={"/"}>Login</Link>
           </form>
-        </>
+        </Container>
       )}
     </>
   );
