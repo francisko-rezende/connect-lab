@@ -19,7 +19,10 @@ const addressSchema = yup.object({
     .matches(validatorRegex.zipCode, { message: errorMessages.zipCode })
     .required(errorMessages.required),
   street: yup.string().required(errorMessages.required),
-  number: yup.number().typeError().required(errorMessages.required),
+  number: yup
+    .number()
+    .typeError("Preencha usando apenas números")
+    .required(errorMessages.required),
   neighborhood: yup.string().required(errorMessages.required),
   city: yup.string().required(errorMessages.required),
   state: yup.string().required(errorMessages.required),

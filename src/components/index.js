@@ -1,3 +1,4 @@
+export { Button } from "./Button";
 export { SignInSection } from "./SignInSection";
 export { InputWrapper } from "./InputWrapper";
 export { Container } from "./Container";
