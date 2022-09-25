@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import * as S from "./SignInSection.styles";
-import { Container, InputWrapper } from "@components";
+import { Container, InputWrapper, Button } from "@components";
 
 export const SignInSection = () => {
   const {
@@ -74,7 +74,7 @@ export const SignInSection = () => {
             </InputWrapper>
             {error && <S.ErrorParagraph>{error}</S.ErrorParagraph>}
             <S.SubmitWrapper>
-              <S.Button type="submit">Acessar</S.Button>
+              <Button type="submit">Acessar</Button>
               <S.CustomLink to={"/cadastro"} variant="underlined">
                 Cadastro
               </S.CustomLink>
