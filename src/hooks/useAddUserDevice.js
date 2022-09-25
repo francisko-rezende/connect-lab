@@ -4,11 +4,17 @@ import { useMutation } from "react-query";
 
 export const useAddUserDevice = () => {
   const mutation = useMutation(
-    ({ userId, deviceId, location, room }) =>
+    ({ data: { userId, deviceId, location, room } }) =>
       addUserDevice(userId, deviceId, location, room),
     {
-      onSuccess: () => {
+      onSuccess: (_, { reset, toast }) => {
+        toast.dismiss();
         queryClient.invalidateQueries("userDevices");
+        reset();
+        toast.success("Device adicionado com sucesso.");
+      },
+      onSettled: (_, __, { setIsOpen }) => {
+        setIsOpen(false);
       },
     },
   );
