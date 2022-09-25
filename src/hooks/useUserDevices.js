@@ -16,5 +16,5 @@ export const useUserDevices = (userId) => {
   const userDevicesQuery = useQuery("userDevices", () =>
     handleFetchUserDeviceData(userId),
   );
-  return { userDevicesQuery };
+  return userDevicesQuery;
 };

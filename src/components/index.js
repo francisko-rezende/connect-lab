@@ -1,3 +1,4 @@
+export { StatusIcon } from "./StatusIcon";
 export { Grid } from "./Grid";
 export { Avatar } from "./Avatar";
 export { Button } from "./Button";

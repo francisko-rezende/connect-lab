@@ -28,6 +28,8 @@ const newUserDeviceSchema = yup.object({
   location: yup.string().required("Campo obrigatório"),
 });
 
+const getDelay = () => Math.random() * (20 - 5) + 5;
+
 export const Devices = () => {
   const devices = useRegisteredDevices();
   const addUserDevice = useAddUserDevice();
@@ -35,8 +37,6 @@ export const Devices = () => {
   useUserDevices(userId);
   useCheckToken();
   const locations = useLocationOptions();
-
-  const getDelay = () => Math.random() * (20 - 5) + 5;
 
   const {
     register,
