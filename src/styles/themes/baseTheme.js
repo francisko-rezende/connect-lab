@@ -23,4 +23,5 @@ export const baseTheme = {
     xlarge: "4.8rem",
     xxlarge: "5.6rem",
   },
+  overlay: "hsla(0, 0%, 0%, 0.439)",
 };

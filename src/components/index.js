@@ -1,3 +1,4 @@
+export { Grid } from "./Grid";
 export { Avatar } from "./Avatar";
 export { Button } from "./Button";
 export { SignInSection } from "./SignInSection";
@@ -6,3 +7,11 @@ export { Container } from "./Container";
 export { Logo } from "./Logo";
 export { Header } from "./Header";
 export { Link } from "./Link";
+export {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "./Dialog";
