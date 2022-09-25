@@ -1,5 +1,5 @@
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const Avatar = styled(AvatarPrimitive.Root)`
   display: inline-flex;
@@ -26,9 +26,11 @@ export const AvatarFallback = styled(AvatarPrimitive.Fallback)`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: white;
-  color: ${({ theme }) => theme.colors.main.main11};
   font-size: 1rem;
   line-height: 1;
-  font-weight: 500;
+  ${({ theme }) => css`
+    background-color: ${theme.colors.gray.gray07};
+    color: ${theme.colors.main.main10};
+    font-weight: ${theme.font.bold};
+  `}
 `;
