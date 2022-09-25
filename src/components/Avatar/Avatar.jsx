@@ -10,10 +10,9 @@ const getInitials = (name) => {
   return `${firstName[0]}${lastName[0].toUpperCase()}`;
 };
 
-export const Avatar = ({ src, name }) => {
-  console.log(getInitials(name));
+export const Avatar = ({ src, name, className }) => {
   return (
-    <S.Avatar>
+    <S.Avatar className={className}>
       <S.AvatarImage src={src} alt={name} />
       <S.AvatarFallback delayMs={0}>{getInitials(name)}</S.AvatarFallback>
     </S.Avatar>
@@ -23,4 +22,5 @@ export const Avatar = ({ src, name }) => {
 Avatar.propTypes = {
   src: PropTypes.string,
   name: PropTypes.string,
+  className: PropTypes.string,
 };
