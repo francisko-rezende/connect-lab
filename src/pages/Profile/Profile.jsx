@@ -9,6 +9,7 @@ import {
   useUpdateProfile,
   useUser,
 } from "@hooks";
+import { Avatar } from "@components";
 
 // todo create schema for update form
 
@@ -53,7 +54,8 @@ export const Profile = () => {
       ) : (
         <>
           <div>
-            <img src={user.photoUrl} alt="Foto" />
+            <Avatar name={user.fullName} src={user.photoUrl} />
+            {/* <img src={user.photoUrl} alt="Foto" /> */}
             <h2>{user.fullName}</h2>
             <p>{user.email}</p>
             <p>{user.phone}</p>
