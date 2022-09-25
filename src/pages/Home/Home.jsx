@@ -1,5 +1,7 @@
 /* eslint-disable camelcase */
-import { getRegisteredDevices, getUser, getWeatherData } from "@api";
+import { getRegisteredDevices, getUser } from "@api";
+import { Container } from "@components";
+import * as S from "./Home.styles";
 import {
   useUserDevices,
   useRemoveUserDevice,
@@ -11,20 +13,21 @@ import {
 } from "@hooks";
 import { queryClient } from "@lib/react-query";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import styled, { css } from "styled-components";
 
 export const Home = () => {
   const { userId } = useGlobalContext();
 
   const userQuery = useUser(userId);
-  // const weatherQuery = useWeatherData(userQuery.data?.userAddress?.city);
-  // queryClient.setQueryDefaults(["weather", userQuery.data?.userAddress?.city], {
-  //   enabled: !!userQuery.data?.userAddress?.city,
-  // });
+  const weatherQuery = useWeatherData(userQuery.data?.userAddress?.city);
+  queryClient.setQueryDefaults(["weather", userQuery.data?.userAddress?.city], {
+    enabled: !!userQuery.data?.userAddress?.city,
+  });
   const { userDevicesQuery } = useUserDevices(userId);
-  useCheckToken();
   const removeDevice = useRemoveUserDevice();
   const toggleDeviceStatus = useToggleDeviceStatus();
+
+  useCheckToken();
 
   useEffect(() => {
     queryClient.prefetchQuery("registeredDevices", getRegisteredDevices);
@@ -32,19 +35,15 @@ export const Home = () => {
   }, [userId]);
 
   return (
-    <>
-      <div>
-        <h1>Home</h1>
-        <Link to={"devices"}>Devices</Link>
-        <Link to={"perfil"}>Perfil</Link>
-      </div>
-
-      {/* {!userQuery.isLoading &
+    <Container>
+      {!userQuery.isLoading &
         !userQuery.isError &
         !weatherQuery.isLoading &
         !weatherQuery.isError && (
-        <div>
-          <p>{Math.round(weatherQuery.data.main.temp)} ºC</p>
+        <S.WeatherWrapper>
+          <S.Temperature>
+            {Math.round(weatherQuery.data.main.temp)} ºC
+          </S.Temperature>
           <p style={{ textTransform: "capitalize" }}>
             {weatherQuery.data.weather[0].description}
           </p>
@@ -59,35 +58,54 @@ export const Home = () => {
           <p>
             Sensação térmica: {Math.round(weatherQuery.data.main.feels_like)}ºC{" "}
           </p>
-        </div>
-      )} */}
+        </S.WeatherWrapper>
+      )}
 
-      <ul>
+      <S.Grid>
         {userDevicesQuery.isLoading ? (
           <p>Loading...</p>
         ) : (
-          userDevicesQuery.data.map(({ device: { name }, is_on, _id }) => {
-            return (
-              <li key={_id}>
-                {name} / tá on? {is_on ? "Sim" : "Nada"}
-                <button
-                  onClick={() => {
-                    toggleDeviceStatus.mutate({
-                      deviceId: _id,
-                      deviceStatus: is_on,
-                    });
-                  }}
-                >
-                  {is_on ? "Desliga" : "Liga"}
-                </button>
-                <button onClick={() => removeDevice.mutate(_id)}>
-                  Remover
-                </button>
-              </li>
-            );
-          })
+          userDevicesQuery.data.map(
+            ({
+              device: { name, photoUrl },
+              is_on,
+              _id,
+              room,
+              local: { description },
+            }) => {
+              return (
+                <li key={_id}>
+                  <S.DeviceCard>
+                    <S.ImgWrapper>
+                      <img src={photoUrl} alt={name} />
+                    </S.ImgWrapper>
+                    <S.DeviceInfoWrapper>
+                      <S.DeviceName>{name}</S.DeviceName>
+                      <S.DeviceInfoParagraph>
+                        {description} | {room} | {is_on ? "ON" : "OFF"}
+                      </S.DeviceInfoParagraph>
+                    </S.DeviceInfoWrapper>
+                    {/* {name} / tá on? {is_on ? "Sim" : "Nada"} */}
+                    <button
+                      onClick={() => {
+                        toggleDeviceStatus.mutate({
+                          deviceId: _id,
+                          deviceStatus: is_on,
+                        });
+                      }}
+                    >
+                      {is_on ? "Desliga" : "Liga"}
+                    </button>
+                    {/* <button onClick={() => removeDevice.mutate(_id)}>
+                      Remover
+                    </button> */}
+                  </S.DeviceCard>
+                </li>
+              );
+            },
+          )
         )}
-      </ul>
-    </>
+      </S.Grid>
+    </Container>
   );
 };

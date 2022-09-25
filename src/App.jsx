@@ -22,12 +22,21 @@ function App() {
         }}
       >
         <Header>
-          <Logo />
+          {/* todo add hidden text component with title */}
+          <h1 aria-label="Connect Lab" style={{ height: "100%" }}>
+            <Logo />
+          </h1>
           {token && <button onClick={signOut}>Deslogar</button>}
           <button onClick={toggleTheme}>Mudar tema</button>
           <nav>
             <Link to="/login" variant="button">
               Login
+            </Link>
+            <Link variant="underlined" to={"devices"}>
+              Devices
+            </Link>
+            <Link variant="underlined" to={"perfil"}>
+              Perfil
             </Link>
           </nav>
         </Header>
