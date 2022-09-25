@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { getRegisteredDevices, getUser } from "@api";
-import { Container } from "@components";
+import { Container, Grid } from "@components";
 import * as S from "./Home.styles";
 import {
   useUserDevices,
@@ -60,7 +60,7 @@ export const Home = () => {
         <p>Loading...</p>
       )}
 
-      <S.Grid>
+      <Grid>
         {userDevicesQuery.isLoading ? (
           <p>Loading...</p>
         ) : (
@@ -104,7 +104,7 @@ export const Home = () => {
             },
           )
         )}
-      </S.Grid>
+      </Grid>
     </Container>
   );
 };
