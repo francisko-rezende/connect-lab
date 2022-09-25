@@ -7,3 +7,11 @@ export { Container } from "./Container";
 export { Logo } from "./Logo";
 export { Header } from "./Header";
 export { Link } from "./Link";
+export {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "./Dialog";
