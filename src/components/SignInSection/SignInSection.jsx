@@ -74,7 +74,9 @@ export const SignInSection = () => {
             </InputWrapper>
             {error && <S.ErrorParagraph>{error}</S.ErrorParagraph>}
             <S.SubmitWrapper>
-              <Button type="submit">Acessar</Button>
+              <Button type="submit" variant="regular">
+                Acessar
+              </Button>
               <S.CustomLink to={"/cadastro"} variant="underlined">
                 Cadastro
               </S.CustomLink>

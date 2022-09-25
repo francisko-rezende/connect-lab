@@ -1,30 +1,41 @@
 import styled, { css } from "styled-components";
 
-export const Button = styled.button`
-  padding: 8px 16px;
-  text-decoration: none;
-  text-transform: uppercase;
-  cursor: pointer;
-  ${({ theme }) => css`
+const buttonVariants = {
+  regular: (theme) => css`
+    text-transform: uppercase;
+
     color: ${theme.colors.main.main12};
     border: unset;
     background: ${theme.colors.main.main09};
     border-radius: ${theme.borderRadius};
     font-weight: ${theme.font.weight.bold};
-  `}
 
-  &:hover {
-    ${({ theme }) => css`
+    &:hover {
       background: ${theme.colors.main.main10};
       border-radius: ${theme.borderRadius};
-    `}
-  }
+    }
+  `,
+  underlined: (theme) => css`
+    color: ${theme.colors.main.main11};
+    width: fit-content;
+    text-decoration: underline;
+    background: unset;
+    border: unset;
+    text-transform: capitalize;
 
-  &:visited {
-    color: unset;
-  }
+    &:hover {
+      color: ${theme.colors.main.main12};
+    }
+  `,
+};
 
-  &:active {
-    color: unset;
-  }
+export const Button = styled.button`
+  padding: 8px 16px;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+
+  ${({ variant, theme }) => css`
+    ${!!variant && buttonVariants[variant](theme)}
+  `}
 `;

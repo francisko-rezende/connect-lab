@@ -19,7 +19,6 @@ export const Registration = () => {
   const handleRegisterUser = async (data) => {
     try {
       const res = await axiosInstance.post("/auth/register", data);
-      console.log(res);
       setRegistrationResult("Usuário cadastrado com sucesso");
     } catch (error) {
       const errorMessage = error.response.data.error;
@@ -186,8 +185,10 @@ export const Registration = () => {
           </S.CustomInputWrapper>
           {registrationResult && <p>{registrationResult}</p>}
           <S.SendWrapper>
-            <Button type="submit">Enviar</Button>
-            <S.CustomLink to={"/"}>Login</S.CustomLink>
+            <Button type="submit" variant="regular">
+              Enviar
+            </Button>
+            <S.CustomLink to={"/login"}>Login</S.CustomLink>
           </S.SendWrapper>
         </S.Form>
       </S.Wrapper>

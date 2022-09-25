@@ -21,7 +21,7 @@ export const Home = () => {
   const userQuery = useUser(userId);
   const weatherQuery = useWeatherData(userQuery.data?.userAddress?.city);
   queryClient.setQueryDefaults(["weather", userQuery.data?.userAddress?.city], {
-    enabled: !!userQuery.data?.userAddress?.city,
+    // enabled: !!userQuery.data?.userAddress?.city,
   });
   const { userDevicesQuery } = useUserDevices(userId);
   const removeDevice = useRemoveUserDevice();
@@ -36,10 +36,7 @@ export const Home = () => {
 
   return (
     <Container>
-      {!userQuery.isLoading &
-        !userQuery.isError &
-        !weatherQuery.isLoading &
-        !weatherQuery.isError && (
+      {!weatherQuery.isLoading & !userQuery.isLoading ? (
         <S.WeatherWrapper>
           <S.Temperature>
             {Math.round(weatherQuery.data.main.temp)} ºC
@@ -59,6 +56,8 @@ export const Home = () => {
             Sensação térmica: {Math.round(weatherQuery.data.main.feels_like)}ºC{" "}
           </p>
         </S.WeatherWrapper>
+      ) : (
+        <p>Loading...</p>
       )}
 
       <S.Grid>
