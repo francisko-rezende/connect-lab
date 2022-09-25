@@ -710,6 +710,11 @@ braces@^3.0.2:
   dependencies:
     fill-range "^7.0.1"
 
+brazilian-values@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/brazilian-values/-/brazilian-values-0.12.0.tgz#99a8d9c5ef115399a4bd057a31bc42afe321278f"
+  integrity sha512-OlB+fNhbmn/PEn9Cr5sZ480GiRtDA26dv0swrDB7BAdyaOHLBeA9cYBbhdgSAx57yA82xZyhmjkijggFt5K1Lw==
+
 broadcast-channel@^3.4.1:
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/broadcast-channel/-/broadcast-channel-3.7.0.tgz#2dfa5c7b4289547ac3f6705f9c00af8723889937"
