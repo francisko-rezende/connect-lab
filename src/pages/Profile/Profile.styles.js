@@ -1,4 +1,4 @@
-import { Avatar } from "@components";
+import { Avatar, DialogContent, DialogTitle, InputWrapper } from "@components";
 import styled, { css } from "styled-components";
 
 export const UserWrapper = styled.div`
@@ -63,5 +63,37 @@ export const Phone = styled.p`
 export const ButtonsWrapper = styled.div`
   display: grid;
   place-items: center;
-  gap: 24px;
+  gap: 4px;
+`;
+
+export const Form = styled.form`
+  display: grid;
+  place-items: center;
+  gap: 32px;
+  padding: 20px;
+  ${({ theme }) => css`
+    background-color: ${theme.colors.gray.gray01};
+    border-radius: ${theme.borderRadius};
+  `}
+`;
+
+export const FieldsWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  row-gap: 28px;
+  column-gap: 16px;
+`;
+
+export const CustomInputWrapper = styled(InputWrapper)`
+  grid-column: span 2;
+`;
+
+export const CustomDialogContent = styled(DialogContent)`
+  max-width: fit-content;
+  max-height: 90vh;
+  background-color: ${({ theme }) => theme.colors.gray07};
+`;
+
+export const CustomDialogTitle = styled(DialogTitle)`
+  text-align: center;
 `;
