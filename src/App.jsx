@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { Router } from "@router";
 import { useAuth, useGlobalContext } from "@hooks";
-import { ThemeProvider } from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
 import { darkTheme, GlobalStyles, lightTheme } from "@styles";
-import { Button, Header, Link, Logo } from "@components";
+import { Button, Header, Link, Logo, MoonIcon, SunIcon } from "@components";
 
 function App() {
   const navigate = useNavigate();
@@ -26,7 +26,9 @@ function App() {
           <h1 aria-label="Connect Lab" style={{ height: "100%" }}>
             <Logo />
           </h1>
-          <button onClick={toggleTheme}>Mudar tema</button>
+          <button onClick={toggleTheme}>
+            {theme === "dark" ? <MoonIcon /> : <SunIcon />}
+          </button>
           <nav>
             {token ? (
               <>

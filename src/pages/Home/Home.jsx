@@ -21,6 +21,7 @@ import {
 } from "@hooks";
 import { queryClient } from "@lib/react-query";
 import { useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 export const Home = () => {
   const { userId } = useGlobalContext();
@@ -60,6 +61,9 @@ export const Home = () => {
 
   return (
     <Container>
+      <div>
+        <Toaster />
+      </div>
       {!weatherQuery.isLoading & !userQuery.isLoading ? (
         <S.WeatherWrapper>
           <S.Temperature>
@@ -183,10 +187,17 @@ export const Home = () => {
               <Button
                 variant="regular"
                 onClick={() =>
-                  removeDevice.mutate({
-                    id: selectedDevice._id,
-                    setIsDialogOpen,
-                  })
+                  toast.promise(
+                    removeDevice.mutateAsync({
+                      id: selectedDevice._id,
+                      setIsDialogOpen,
+                    }),
+                    {
+                      loading: "Removendo...",
+                      success: <b>Remoção bem sucedida!</b>,
+                      error: <b>Não foi possível remover device.</b>,
+                    },
+                  )
                 }
               >
                 Remover

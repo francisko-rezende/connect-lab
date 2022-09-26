@@ -5,6 +5,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { axiosInstance } from "@lib/axios";
 import { formSchema, validatorRegex } from "@lib/yup";
 import { Button, Container, InputWrapper } from "@components";
+import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export const Registration = () => {
   const {
@@ -14,12 +16,14 @@ export const Registration = () => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(formSchema) });
 
+  const navigate = useNavigate();
   const [registrationResult, setRegistrationResult] = useState("");
 
   const handleRegisterUser = async (data) => {
     try {
       const res = await axiosInstance.post("/auth/register", data);
-      setRegistrationResult("Usuário cadastrado com sucesso");
+      toast.success("Cadastro realizado com sucesso!");
+      setTimeout(() => navigate("/login"), 3 * 1000);
     } catch (error) {
       const errorMessage = error.response.data.error;
       setRegistrationResult(`Houve um erro: ${errorMessage}`);
@@ -28,6 +32,9 @@ export const Registration = () => {
 
   return (
     <Container>
+      <div>
+        <Toaster />
+      </div>
       <S.Wrapper>
         <h2>Cadastrar</h2>
         <S.Form onSubmit={handleSubmit(handleRegisterUser)}>
