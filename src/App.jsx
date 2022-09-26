@@ -3,7 +3,7 @@ import { Router } from "@router";
 import { useAuth, useGlobalContext } from "@hooks";
 import { ThemeProvider } from "styled-components";
 import { darkTheme, GlobalStyles, lightTheme } from "@styles";
-import { Header, Link, Logo } from "@components";
+import { Button, Header, Link, Logo } from "@components";
 
 function App() {
   const navigate = useNavigate();
@@ -26,25 +26,35 @@ function App() {
           <h1 aria-label="Connect Lab" style={{ height: "100%" }}>
             <Logo />
           </h1>
-          {token && <button onClick={signOut}>Deslogar</button>}
           <button onClick={toggleTheme}>Mudar tema</button>
           <nav>
-            <Link to="/login" variant="button">
-              Login
-            </Link>
-            <Link variant="underlined" to={"devices"}>
-              Devices
-            </Link>
-            <Link variant="underlined" to={"perfil"}>
-              Perfil
-            </Link>
+            {token ? (
+              <>
+                <Button variant="underlined" onClick={signOut}>
+                  Deslogar
+                </Button>
+                <Link variant="underlined" to="/">
+                  Início
+                </Link>
+                <Link variant="underlined" to="devices">
+                  Devices
+                </Link>
+                <Link variant="underlined" to="perfil">
+                  Perfil
+                </Link>
+              </>
+            ) : (
+              <Link to="/login" variant="button">
+                Login
+              </Link>
+            )}
           </nav>
         </Header>
         <main>
           <Router />
         </main>
         <footer>
-          <p>Feito com 😠 por Francisko</p>
+          <p style={{ textAlign: "center" }}>Feito por Francisko</p>
         </footer>
         <GlobalStyles />
       </div>

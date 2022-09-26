@@ -53,3 +53,14 @@ export const userSchema = yup.object({
     .string()
     .min(8, errorMessages.getMinCharNumMessage('"senha"', 8)),
 });
+
+export const profileUpdateSchema = yup.object({
+  email: yup.string().email("Email inválido").required(errorMessages.required),
+  fullName: yup.string().required(errorMessages.required),
+  photoUrl: yup.string().url(errorMessages.url),
+  phone: yup
+    .string()
+    .phone("BR", true, "Telefone inválido")
+    .required(errorMessages.required),
+  userAddress: addressSchema,
+});

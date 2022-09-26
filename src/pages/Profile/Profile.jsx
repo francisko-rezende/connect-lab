@@ -1,16 +1,23 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { formSchema, validatorRegex } from "@lib/yup";
+import { formSchema, profileUpdateSchema, validatorRegex } from "@lib/yup";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { formatToPhone } from "brazilian-values";
 import {
+  useAuth,
   useCheckToken,
   useGlobalContext,
   useUpdateProfile,
   useUser,
 } from "@hooks";
-import { Button, Container, Link as CustomLink } from "@components";
+import {
+  Button,
+  Container,
+  Dialog,
+  InputWrapper,
+  Link as CustomLink,
+} from "@components";
 import * as S from "./Profile.styles";
 
 // todo create schema for update form
@@ -23,15 +30,18 @@ export const Profile = () => {
     reset,
     setValue,
     formState: { errors },
-  } = useForm();
+  } = useForm({ resolver: yupResolver(profileUpdateSchema) });
 
   useCheckToken();
 
   const { userId } = useGlobalContext();
+  const { signOut } = useAuth();
 
   const userQuery = useUser(userId);
 
   const user = userQuery.data;
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
     if (!userQuery.isLoading) {
@@ -67,163 +77,181 @@ export const Profile = () => {
             <div>
               <S.H3>Endereço</S.H3>
               <p>
-                {user.userAddress.zipCode} - {user.userAddress.street} -{" "}
+                {user.userAddress.zipCode} - {user.userAddress.street}{" "}
                 {user.userAddress.complement} - {user.userAddress.neighborhood}{" "}
                 - {user.userAddress.city} - {user.userAddress.state}
               </p>
             </div>
             <S.ButtonsWrapper>
-              <CustomLink variant="button" to="">
+              <Button variant="regular" onClick={() => setIsDialogOpen(true)}>
                 Editar
-              </CustomLink>
-              <Button variant="underlined">Sair</Button>
+              </Button>
+              <Button variant="underlined" onClick={() => signOut()}>
+                Sair
+              </Button>
             </S.ButtonsWrapper>
           </S.UserWrapper>
 
-          <form onSubmit={handleSubmit(handleUpdateUserInfo)}>
-            <div>
-              <label htmlFor="fullName">Nome completo*</label>
-              <input
-                type="text"
-                name="fullName"
-                id="fullName"
-                {...register("fullName")}
-              />
-              {errors.fullName && <span>{errors.fullName.message}</span>}
-            </div>
-            <div>
-              <label htmlFor="email">E-mail*</label>
-              <input
-                type="text"
-                name="email"
-                id="email"
-                {...register("email")}
-              />
-              {errors.email && <span>{errors.email.message}</span>}
-            </div>
-            <div>
-              <label htmlFor="photoUrl">URL foto de perfil</label>
-              <input
-                type="text"
-                name="photoUrl"
-                id="photoUrl"
-                {...register("photoUrl")}
-              />
-              {errors.photoUrl && <span>{errors.photoUrl.message}</span>}
-            </div>
-            <div>
-              <label htmlFor="phone">Telefone*</label>
-              <input
-                type="phone"
-                name="phone"
-                id="phone"
-                {...register("phone")}
-              />
-              {errors.phone && <span>{errors.phone.message}</span>}
-            </div>
-            <div>
-              <label htmlFor="zipCode">CEP*</label>
-              <input
-                type="text"
-                name="zipCode"
-                id="zipCode"
-                {...register("userAddress.zipCode", {
-                  onBlur: (e) => {
-                    const zipCode = e.target.value;
-                    const isValidZip = validatorRegex.zipCode.test(zipCode);
-                    if (isValidZip) {
-                      const numbersOnlyZip = zipCode.replace(/\D/g, "");
-                      fetch(`https://viacep.com.br/ws/${numbersOnlyZip}/json/`)
-                        .then((response) => response.json())
-                        .then(({ bairro, localidade, logradouro, uf }) => {
-                          setValue("userAddress.neighborhood", bairro);
-                          setValue("userAddress.city", localidade);
-                          setValue("userAddress.street", logradouro);
-                          setValue("userAddress.state", uf);
-                        });
-                    }
-                  },
-                })}
-              />
-              {errors.userAddress?.zipCode?.message && (
-                <span>{errors.userAddress?.zipCode?.message}</span>
-              )}
-            </div>
-            <div>
-              <label htmlFor="street">Logradouro/Endereço*</label>
-              <input
-                type="text"
-                name="street"
-                id="street"
-                {...register("userAddress.street")}
-              />
-              {errors.userAddress?.street?.message && (
-                <span>{errors.userAddress?.street.message}</span>
-              )}
-            </div>
-            <div>
-              <label htmlFor="city">Cidade*</label>
-              <input
-                type="text"
-                name="city"
-                id="city"
-                {...register("userAddress.city")}
-              />
-              {errors.userAddress?.city?.message && (
-                <span>{errors.userAddress?.city?.message}</span>
-              )}
-            </div>
-            <div>
-              <label htmlFor="state">Estado*</label>
-              <input
-                type="text"
-                name="state"
-                id="state"
-                {...register("userAddress.state")}
-              />
-              {errors.userAddress?.state?.message && (
-                <span>{errors.userAddress?.state?.message}</span>
-              )}
-            </div>
-            <div>
-              <label htmlFor="complement">Complemento</label>
-              <input
-                type="text"
-                name="complement"
-                id="complement"
-                {...register("userAddress.complement")}
-              />
-            </div>
-            <div>
-              <label htmlFor="number">Número*</label>
-              <input
-                type="text"
-                name="number"
-                id="number"
-                {...register("userAddress.number")}
-              />
-              {errors.userAddress?.number?.message && (
-                <span>{errors.userAddress?.number?.message}</span>
-              )}
-            </div>
-            <div>
-              <label htmlFor="neighborhood">Bairro*</label>
-              <input
-                type="text"
-                name="neighborhood"
-                id="neighborhood"
-                {...register("userAddress.neighborhood")}
-              />
-              {errors.userAddress?.neighborhood?.message && (
-                <span>{errors.userAddress?.neighborhood?.message}</span>
-              )}
-            </div>
-            <button>Salvar</button>
-            <button type="reset" onClick={() => reset()}>
-              Resetar
-            </button>
-            <Link to={"/"}>Login</Link>
-          </form>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <S.CustomDialogContent>
+              <S.CustomDialogTitle>Meu Perfil</S.CustomDialogTitle>
+              <S.Form onSubmit={handleSubmit(handleUpdateUserInfo)}>
+                <S.FieldsWrapper>
+                  <InputWrapper>
+                    <label htmlFor="fullName">Nome completo*</label>
+                    <input
+                      type="text"
+                      name="fullName"
+                      id="fullName"
+                      {...register("fullName")}
+                    />
+                    {errors.fullName && <p>{errors.fullName.message}</p>}
+                  </InputWrapper>
+                  <InputWrapper>
+                    <label htmlFor="email">E-mail*</label>
+                    <input
+                      type="text"
+                      name="email"
+                      id="email"
+                      {...register("email")}
+                    />
+                    {errors.email && <p>{errors.email.message}</p>}
+                  </InputWrapper>
+                  <InputWrapper>
+                    <label htmlFor="photoUrl">URL foto de perfil</label>
+                    <input
+                      type="text"
+                      name="photoUrl"
+                      id="photoUrl"
+                      {...register("photoUrl")}
+                    />
+                    {errors.photoUrl && <p>{errors.photoUrl.message}</p>}
+                  </InputWrapper>
+                  <InputWrapper>
+                    <label htmlFor="phone">Telefone*</label>
+                    <input
+                      type="phone"
+                      name="phone"
+                      id="phone"
+                      {...register("phone")}
+                    />
+                    {errors.phone && <p>{errors.phone.message}</p>}
+                  </InputWrapper>
+                  <InputWrapper>
+                    <label htmlFor="zipCode">CEP*</label>
+                    <input
+                      type="text"
+                      name="zipCode"
+                      id="zipCode"
+                      {...register("userAddress.zipCode", {
+                        onBlur: (e) => {
+                          const zipCode = e.target.value;
+                          const isValidZip =
+                            validatorRegex.zipCode.test(zipCode);
+                          if (isValidZip) {
+                            const numbersOnlyZip = zipCode.replace(/\D/g, "");
+                            fetch(
+                              `https://viacep.com.br/ws/${numbersOnlyZip}/json/`,
+                            )
+                              .then((response) => response.json())
+                              .then(
+                                ({ bairro, localidade, logradouro, uf }) => {
+                                  setValue("userAddress.neighborhood", bairro);
+                                  setValue("userAddress.city", localidade);
+                                  setValue("userAddress.street", logradouro);
+                                  setValue("userAddress.state", uf);
+                                },
+                              );
+                          }
+                        },
+                      })}
+                    />
+                    {errors.userAddress?.zipCode?.message && (
+                      <p>{errors.userAddress?.zipCode?.message}</p>
+                    )}
+                  </InputWrapper>
+                  <InputWrapper>
+                    <label htmlFor="street">Logradouro/Endereço*</label>
+                    <input
+                      type="text"
+                      name="street"
+                      id="street"
+                      {...register("userAddress.street")}
+                    />
+                    {errors.userAddress?.street?.message && (
+                      <p>{errors.userAddress?.street.message}</p>
+                    )}
+                  </InputWrapper>
+                  <InputWrapper>
+                    <label htmlFor="city">Cidade*</label>
+                    <input
+                      type="text"
+                      name="city"
+                      id="city"
+                      {...register("userAddress.city")}
+                    />
+                    {errors.userAddress?.city?.message && (
+                      <p>{errors.userAddress?.city?.message}</p>
+                    )}
+                  </InputWrapper>
+                  <InputWrapper>
+                    <label htmlFor="state">Estado*</label>
+                    <input
+                      type="text"
+                      name="state"
+                      id="state"
+                      {...register("userAddress.state")}
+                    />
+                    {errors.userAddress?.state?.message && (
+                      <p>{errors.userAddress?.state?.message}</p>
+                    )}
+                  </InputWrapper>
+                  <InputWrapper>
+                    <label htmlFor="complement">Complemento</label>
+                    <input
+                      type="text"
+                      name="complement"
+                      id="complement"
+                      {...register("userAddress.complement")}
+                    />
+                  </InputWrapper>
+                  <InputWrapper>
+                    <label htmlFor="number">Número*</label>
+                    <input
+                      type="text"
+                      name="number"
+                      id="number"
+                      {...register("userAddress.number")}
+                    />
+                    {errors.userAddress?.number?.message && (
+                      <p>{errors.userAddress?.number?.message}</p>
+                    )}
+                  </InputWrapper>
+                  <S.CustomInputWrapper>
+                    <label htmlFor="neighborhood">Bairro*</label>
+                    <input
+                      type="text"
+                      name="neighborhood"
+                      id="neighborhood"
+                      {...register("userAddress.neighborhood")}
+                    />
+                    {errors.userAddress?.neighborhood?.message && (
+                      <p>{errors.userAddress?.neighborhood?.message}</p>
+                    )}
+                  </S.CustomInputWrapper>
+                </S.FieldsWrapper>
+                <S.ButtonsWrapper>
+                  <Button variant="regular">Salvar</Button>
+                  <Button
+                    variant="underlined"
+                    onClick={() => setIsDialogOpen(false)}
+                  >
+                    Cancelar
+                  </Button>
+                </S.ButtonsWrapper>
+              </S.Form>
+            </S.CustomDialogContent>
+          </Dialog>
         </Container>
       )}
     </>
