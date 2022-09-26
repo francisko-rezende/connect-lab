@@ -1,34 +1,65 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { useNavigate } from "react-router-dom";
+import { Router } from "@router";
+import { useAuth, useGlobalContext } from "@hooks";
+import { ThemeProvider } from "styled-components";
+import { darkTheme, GlobalStyles, lightTheme } from "@styles";
+import { Button, Header, Link, Logo } from "@components";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const navigate = useNavigate();
+  const { token, signOut } = useAuth();
+  const { theme, toggleTheme } = useGlobalContext();
+  const currentTheme = theme === "dark" ? darkTheme : lightTheme;
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <ThemeProvider theme={currentTheme}>
+      <div
+        style={{
+          minHeight: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        }}
+      >
+        <Header>
+          {/* todo add hidden text component with title */}
+          <h1 aria-label="Connect Lab" style={{ height: "100%" }}>
+            <Logo />
+          </h1>
+          <button onClick={toggleTheme}>Mudar tema</button>
+          <nav>
+            {token ? (
+              <>
+                <Button variant="underlined" onClick={signOut}>
+                  Deslogar
+                </Button>
+                <Link variant="underlined" to="/">
+                  Início
+                </Link>
+                <Link variant="underlined" to="devices">
+                  Devices
+                </Link>
+                <Link variant="underlined" to="perfil">
+                  Perfil
+                </Link>
+              </>
+            ) : (
+              <Link to="/login" variant="button">
+                Login
+              </Link>
+            )}
+          </nav>
+        </Header>
+        <main>
+          <Router />
+        </main>
+        <footer>
+          <p style={{ textAlign: "center" }}>Feito por Francisko</p>
+        </footer>
+        <GlobalStyles />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
+    </ThemeProvider>
+  );
 }
 
-export default App
+export default App;
