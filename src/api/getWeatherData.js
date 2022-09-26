@@ -5,7 +5,7 @@ import axios from "axios";
 
 export const getWeatherData = async (cityName) => {
   const cityCoordinatesRes = await axios.get(
-    `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=${OPENWEATHER_KEY}`,
+    `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=${OPENWEATHER_KEY}`,
   );
 
   const { lat, lon } = cityCoordinatesRes.data[0];

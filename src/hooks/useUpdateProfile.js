@@ -6,7 +6,10 @@ export const useUpdateProfile = () => {
   const mutation = useMutation(
     ({ userId, data }) => updateProfile(userId, data),
     {
-      onSuccess: () => queryClient.invalidateQueries("user"),
+      onSuccess: (_, { setIsDialogOpen }) => {
+        queryClient.invalidateQueries("user");
+        setIsDialogOpen(false);
+      },
     },
   );
 

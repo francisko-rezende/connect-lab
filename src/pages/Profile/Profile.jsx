@@ -19,6 +19,7 @@ import {
   Link as CustomLink,
 } from "@components";
 import * as S from "./Profile.styles";
+import toast, { Toaster } from "react-hot-toast";
 
 // todo create schema for update form
 // todo replace paragraphs with semantic html for address info
@@ -57,8 +58,15 @@ export const Profile = () => {
 
   const updateProfile = useUpdateProfile();
 
-  const handleUpdateUserInfo = async (data) => {
-    updateProfile.mutate({ userId: user._id, data });
+  const handleUpdateUserInfo = (data) => {
+    toast.promise(
+      updateProfile.mutateAsync({ userId: user._id, data, setIsDialogOpen }),
+      {
+        loading: "Salvando alterações...",
+        success: <b>Alterações salvas!</b>,
+        error: <b>Não foi possível salvar as alterações.</b>,
+      },
+    );
   };
   return (
     <>
@@ -66,6 +74,9 @@ export const Profile = () => {
         <p>Loading...</p>
       ) : (
         <Container>
+          <div>
+            <Toaster />
+          </div>
           <S.UserWrapper>
             <S.H2>Meu Perfil</S.H2>
             <S.UserInfoWrapper>
