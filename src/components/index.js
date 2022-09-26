@@ -1,3 +1,5 @@
+export { MoonIcon } from "./MoonIcon";
+export { SunIcon } from "./SunIcon";
 export { StatusIcon } from "./StatusIcon";
 export { Grid } from "./Grid";
 export { Avatar } from "./Avatar";
