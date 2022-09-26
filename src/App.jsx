@@ -54,7 +54,7 @@ function App() {
           <Router />
         </main>
         <footer>
-          <p>Feito com 😠 por Francisko</p>
+          <p style={{ textAlign: "center" }}>Feito por Francisko</p>
         </footer>
         <GlobalStyles />
       </div>

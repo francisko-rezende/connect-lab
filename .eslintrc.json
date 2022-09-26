@@ -1,5 +1,3 @@
-//todo turn a11y plugin back on
-
 {
   "env": {
     "browser": true,
@@ -10,7 +8,7 @@
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "plugin:react/jsx-runtime",
-    // "plugin:jsx-a11y/recommended",
+    "plugin:jsx-a11y/recommended",
     "standard",
     "prettier"
   ],
@@ -19,8 +17,7 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  // "plugins": ["react", "jsx-a11y"],
-  "plugins": ["react"],
+  "plugins": ["react", "jsx-a11y"],
   "settings": {
     "react": {
       "version": "detect"
