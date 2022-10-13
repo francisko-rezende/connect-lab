@@ -22,6 +22,7 @@ html, body {
 body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  transition: all 0.50s linear;
 }
 
 img, picture, video, canvas, svg {
@@ -40,5 +41,16 @@ p, h1, h2, h3, h4, h5, h6 {
 
 #root, #__next {
   isolation: isolate;
+}
+
+.changeTheme{
+  background-color: transparent;
+  color: ${({ theme }) => theme.colors.gray.gray13};
+  border-radius: 5px;
+  float: right;
+  margin: 5px 5px 0px 0px;
+  font-size: 30px;
+  box-shadow:none;
+  border: 0;
 }
 `;

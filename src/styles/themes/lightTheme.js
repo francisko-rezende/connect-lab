@@ -16,6 +16,7 @@ export const lightTheme = {
       gray10: "#868682",
       gray11: "#706f6c",
       gray12: "#1b1b18",
+      gray13: "orange",
     },
     main: {
       main01: "#fefdfb",
