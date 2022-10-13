@@ -102,6 +102,12 @@ export const Home = () => {
           Todos
         </Button>
       </S.FilterButtonsWrapper>
+
+     { filteredDevices?.length < 1 ? (
+              <div className="DeviceSpace">
+                <h2>Nenhum dispositivo adicionado</h2>
+              </div>
+            ) : (
       <Grid>
         {userDevicesQuery.isLoading ? (
           <p>Loading...</p>
@@ -144,7 +150,7 @@ export const Home = () => {
           })
         )}
       </Grid>
-
+)}
       {selectedDevice && (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent>

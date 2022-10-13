@@ -16,6 +16,7 @@ export const darkTheme = {
       gray10: "#7f7e77",
       gray11: "#a1a09a",
       gray12: "#ededec",
+      gray13: "yellow",
     },
     main: {
       main01: "#1f1300",

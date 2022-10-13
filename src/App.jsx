@@ -4,13 +4,19 @@ import { useAuth, useGlobalContext } from "@hooks";
 import styled, { ThemeProvider } from "styled-components";
 import { darkTheme, GlobalStyles, lightTheme } from "@styles";
 import { Button, Header, Link, Logo, MoonIcon, SunIcon } from "@components";
+import { useState } from "react";
 
 function App() {
   const navigate = useNavigate();
   const { token, signOut } = useAuth();
   const { theme, toggleTheme } = useGlobalContext();
   const currentTheme = theme === "dark" ? darkTheme : lightTheme;
-
+  const [icon, setIcon] = useState("fa-solid fa-moon");
+  const themeToggler = () => {
+    icon === "fa-solid fa-sun"
+      ? setIcon("fa-solid fa-moon")
+      : setIcon("fa-solid fa-sun");
+  };
   return (
     <ThemeProvider theme={currentTheme}>
       <div
@@ -26,9 +32,15 @@ function App() {
           <h1 aria-label="Connect Lab" style={{ height: "100%" }}>
             <Logo />
           </h1>
-          <button onClick={toggleTheme}>
-            {theme === "dark" ? <MoonIcon /> : <SunIcon />}
-          </button>
+          <button
+          className="changeTheme"
+          onClick={function (event) {
+            toggleTheme();
+            themeToggler();
+          }}
+        >
+          <i className={icon}></i>
+        </button>
           <nav>
             {token ? (
               <>
@@ -52,9 +64,11 @@ function App() {
             )}
           </nav>
         </Header>
+
         <main>
           <Router />
         </main>
+
         <footer>
           <p style={{ textAlign: "center" }}>Feito por Francisko</p>
         </footer>
