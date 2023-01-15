@@ -44,7 +44,7 @@ export const formSchema = yup.object({
     .string()
     .phone("BR", true, "Telefone inválido")
     .required(errorMessages.required),
-  userAddress: addressSchema,
+  address: addressSchema,
 });
 
 export const userSchema = yup.object({
