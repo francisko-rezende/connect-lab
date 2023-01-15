@@ -24,7 +24,7 @@ export const SignInSection = () => {
 
   const handleLogin = async (data) => {
     try {
-      const res = await axiosInstance.post("/auth/login", data);
+      const res = await axiosInstance.post("sign-in", data);
 
       const { token, user } = res.data;
       const userId = user._id;

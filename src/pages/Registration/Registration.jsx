@@ -14,14 +14,34 @@ export const Registration = () => {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm({ resolver: yupResolver(formSchema) });
+  } = useForm({
+    defaultValues: {
+      address: {
+        state: "MG",
+        city: "Juiz de Fora",
+        neighborhood: "São Mateus",
+        number: 17,
+        street: "Rua Melo Franco",
+        zipCode: "36026-000",
+        complement: "",
+      },
+      phone: "(35) 9 9828-0000",
+      photoUrl: "https://duck.com",
+      fullName: "Teste 1",
+      confirmPassword: "VemMonstro",
+      password: "VemMonstro",
+      email: "teste1@mail.com",
+    },
+    resolver: yupResolver(formSchema),
+  });
 
   const navigate = useNavigate();
   const [registrationResult, setRegistrationResult] = useState("");
 
   const handleRegisterUser = async (data) => {
     try {
-      const res = await axiosInstance.post("/auth/register", data);
+      console.log(data);
+      await axiosInstance.post("/auth/register", data);
       toast.success("Cadastro realizado com sucesso!");
       setTimeout(() => navigate("/login"), 3 * 1000);
     } catch (error) {
@@ -99,7 +119,7 @@ export const Registration = () => {
               type="text"
               name="zipCode"
               id="zipCode"
-              {...register("userAddress.zipCode", {
+              {...register("address.zipCode", {
                 onBlur: (e) => {
                   const zipCode = e.target.value;
                   const isValidZip = validatorRegex.zipCode.test(zipCode);
@@ -108,17 +128,17 @@ export const Registration = () => {
                     fetch(`https://viacep.com.br/ws/${numbersOnlyZip}/json/`)
                       .then((response) => response.json())
                       .then(({ bairro, localidade, logradouro, uf }) => {
-                        setValue("userAddress.neighborhood", bairro);
-                        setValue("userAddress.city", localidade);
-                        setValue("userAddress.street", logradouro);
-                        setValue("userAddress.state", uf);
+                        setValue("address.neighborhood", bairro);
+                        setValue("address.city", localidade);
+                        setValue("address.street", logradouro);
+                        setValue("address.state", uf);
                       });
                   }
                 },
               })}
             />
-            {errors.userAddress?.zipCode?.message && (
-              <p>{errors.userAddress?.zipCode?.message}</p>
+            {errors.address?.zipCode?.message && (
+              <p>{errors.address?.zipCode?.message}</p>
             )}
           </InputWrapper>
           <InputWrapper>
@@ -127,10 +147,10 @@ export const Registration = () => {
               type="text"
               name="street"
               id="street"
-              {...register("userAddress.street")}
+              {...register("address.street")}
             />
-            {errors.userAddress?.street?.message && (
-              <p>{errors.userAddress?.street.message}</p>
+            {errors.address?.street?.message && (
+              <p>{errors.address?.street.message}</p>
             )}
           </InputWrapper>
           <InputWrapper>
@@ -139,10 +159,10 @@ export const Registration = () => {
               type="text"
               name="city"
               id="city"
-              {...register("userAddress.city")}
+              {...register("address.city")}
             />
-            {errors.userAddress?.city?.message && (
-              <p>{errors.userAddress?.city?.message}</p>
+            {errors.address?.city?.message && (
+              <p>{errors.address?.city?.message}</p>
             )}
           </InputWrapper>
           <InputWrapper>
@@ -151,10 +171,10 @@ export const Registration = () => {
               type="text"
               name="state"
               id="state"
-              {...register("userAddress.state")}
+              {...register("address.state")}
             />
-            {errors.userAddress?.state?.message && (
-              <p>{errors.userAddress?.state?.message}</p>
+            {errors.address?.state?.message && (
+              <p>{errors.address?.state?.message}</p>
             )}
           </InputWrapper>
           <InputWrapper>
@@ -163,7 +183,7 @@ export const Registration = () => {
               type="text"
               name="complement"
               id="complement"
-              {...register("userAddress.complement")}
+              {...register("address.complement")}
             />
           </InputWrapper>
           <InputWrapper>
@@ -172,10 +192,10 @@ export const Registration = () => {
               type="text"
               name="number"
               id="number"
-              {...register("userAddress.number")}
+              {...register("address.number")}
             />
-            {errors.userAddress?.number?.message && (
-              <p>{errors.userAddress?.number?.message}</p>
+            {errors.address?.number?.message && (
+              <p>{errors.address?.number?.message}</p>
             )}
           </InputWrapper>
           <S.CustomInputWrapper>
@@ -184,10 +204,10 @@ export const Registration = () => {
               type="text"
               name="neighborhood"
               id="neighborhood"
-              {...register("userAddress.neighborhood")}
+              {...register("address.neighborhood")}
             />
-            {errors.userAddress?.neighborhood?.message && (
-              <p>{errors.userAddress?.neighborhood?.message}</p>
+            {errors.address?.neighborhood?.message && (
+              <p>{errors.address?.neighborhood?.message}</p>
             )}
           </S.CustomInputWrapper>
           {registrationResult && <p>{registrationResult}</p>}
