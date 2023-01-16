@@ -64,3 +64,17 @@ export const profileUpdateSchema = yup.object({
     .required(errorMessages.required),
   userAddress: addressSchema,
 });
+
+export const changePasswordSchema = yup.object({
+  email: yup.string().email().required(errorMessages.required),
+  oldPassword: yup
+    .string()
+    .min(8, errorMessages.getMinCharNumMessage('"senha"', 8)),
+  newPassword: yup
+    .string()
+    .min(8, errorMessages.getMinCharNumMessage('"senha"', 8)),
+  confirmNewPassword: yup
+    .string()
+    .required(errorMessages.required)
+    .oneOf([yup.ref("newPassword"), null], "As senhas devem ser iguais"),
+});

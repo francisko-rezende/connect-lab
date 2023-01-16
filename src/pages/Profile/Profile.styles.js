@@ -1,6 +1,16 @@
 import { Avatar, DialogContent, DialogTitle, InputWrapper } from "@components";
 import styled, { css } from "styled-components";
 
+export const SubmitWrapper = styled.div`
+  margin-top: 16px;
+  gap: 16px;
+  display: grid;
+  grid-template-columns: minmax(min-content, 200px);
+  place-self: center;
+  justify-content: center;
+  width: 100%;
+`;
+
 export const UserWrapper = styled.div`
   place-items: center;
   gap: 40px;

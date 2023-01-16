@@ -1,6 +1,6 @@
 import { axiosInstance } from "@lib/axios";
 
-export const getUser = async (id) => {
-  const { data } = await axiosInstance.get(`/users/${id}`);
+export const getUser = async () => {
+  const { data } = await axiosInstance.get(`/user`);
   return data;
 };

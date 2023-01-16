@@ -106,10 +106,13 @@ export const Devices = () => {
             <S.Form
               onSubmit={handleSubmit((data) => {
                 toast.loading("Adicionando device");
-                setTimeout(
-                  () => addUserDevice.mutate({ data, setIsOpen, reset, toast }),
-                  getDelay() * 1000,
-                );
+                // console.log(data);
+                // toast.dismiss();
+                addUserDevice.mutate({ data, setIsOpen, reset, toast });
+                // setTimeout(
+                //   () => addUserDevice.mutate({ data, setIsOpen, reset, toast }),
+                //   getDelay() * 1000,
+                // );
               })}
             >
               <input {...register("userId")} style={{ display: "none" }} />
@@ -137,7 +140,10 @@ export const Devices = () => {
                   </option>
                   {!locations.isLoading &&
                     locations.data.map((location) => (
-                      <option key={location._id} value={location._id}>
+                      <option
+                        key={location.locationId}
+                        value={location.locationId}
+                      >
                         {location.description}
                       </option>
                     ))}

@@ -1,5 +1,10 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { formSchema, profileUpdateSchema, validatorRegex } from "@lib/yup";
+import {
+  changePasswordSchema,
+  formSchema,
+  profileUpdateSchema,
+  validatorRegex,
+} from "@lib/yup";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -20,6 +25,7 @@ import {
 } from "@components";
 import * as S from "./Profile.styles";
 import toast, { Toaster } from "react-hot-toast";
+import { axiosInstance } from "@lib/axios";
 
 // todo create schema for update form
 // todo replace paragraphs with semantic html for address info
@@ -31,7 +37,7 @@ export const Profile = () => {
     reset,
     setValue,
     formState: { errors },
-  } = useForm({ resolver: yupResolver(profileUpdateSchema) });
+  } = useForm({ resolver: yupResolver(changePasswordSchema) });
 
   useCheckToken();
 
@@ -44,17 +50,17 @@ export const Profile = () => {
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  useEffect(() => {
-    if (!userQuery.isLoading) {
-      setValue("fullName", user.fullName);
-      setValue("photoUrl", user.photoUrl);
-      setValue("email", user.email);
-      setValue("password", user.password);
-      setValue("phone", user.phone);
-      setValue("userAddress", user.userAddress);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userQuery.isLoading]);
+  // useEffect(() => {
+  //   if (!userQuery.isLoading) {
+  //     setValue("fullName", user.fullName);
+  //     setValue("photoUrl", user.photoUrl);
+  //     setValue("email", user.email);
+  //     setValue("password", user.password);
+  //     setValue("phone", user.phone);
+  //     setValue("address", user.address);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [userQuery.isLoading]);
 
   const updateProfile = useUpdateProfile();
 
@@ -68,6 +74,19 @@ export const Profile = () => {
       },
     );
   };
+
+  const handleChangePassword = async (data) => {
+    try {
+      toast.loading("Carregando");
+      await axiosInstance.patch("change-password", data);
+      toast.success("Senha alterada com sucesso");
+    } catch (error) {
+      toast.error("Ocorreu um erro, tente novamente depois");
+      console.log(error);
+    }
+    toast.dismiss();
+  };
+
   return (
     <>
       {userQuery.isLoading ? (
@@ -88,14 +107,14 @@ export const Profile = () => {
             <div>
               <S.H3>Endereço</S.H3>
               <p>
-                {user.userAddress.zipCode} - {user.userAddress.street}{" "}
-                {user.userAddress.complement} - {user.userAddress.neighborhood}{" "}
-                - {user.userAddress.city} - {user.userAddress.state}
+                {user.address.zipCode} - {user.address.street}{" "}
+                {user.address.complement} - {user.address.neighborhood} -{" "}
+                {user.address.city} - {user.address.state}
               </p>
             </div>
             <S.ButtonsWrapper>
               <Button variant="regular" onClick={() => setIsDialogOpen(true)}>
-                Editar
+                Mudar senha
               </Button>
               <Button variant="underlined" onClick={() => signOut()}>
                 Sair
@@ -106,7 +125,61 @@ export const Profile = () => {
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <S.CustomDialogContent>
               <S.CustomDialogTitle>Meu Perfil</S.CustomDialogTitle>
-              <S.Form onSubmit={handleSubmit(handleUpdateUserInfo)}>
+
+              <S.Form onSubmit={handleSubmit(handleChangePassword)}>
+                <InputWrapper>
+                  <label htmlFor="email">E-mail</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    {...register("email")}
+                  />
+                  {errors.email && <p>{errors.email.message}</p>}
+                </InputWrapper>
+                <InputWrapper>
+                  <label htmlFor="oldPassword">Senha antiga</label>
+                  <input
+                    type="password"
+                    id="oldPassword"
+                    name="oldPassword"
+                    {...register("oldPassword")}
+                  />
+                  {errors.oldPassword && <p>{errors.oldPassword.message}</p>}
+                </InputWrapper>
+                <InputWrapper>
+                  <label htmlFor="newPassword">Senha nova</label>
+                  <input
+                    type="password"
+                    id="newPassword"
+                    name="newPassword"
+                    {...register("newPassword")}
+                  />
+                  {errors.newPassword && <p>{errors.newPassword.message}</p>}
+                </InputWrapper>
+
+                <InputWrapper>
+                  <label htmlFor="confirmNewPassword">
+                    Confirmar senha nova
+                  </label>
+                  <input
+                    type="password"
+                    id="confirmNewPassword"
+                    name="confirmNewPassword"
+                    {...register("confirmNewPassword")}
+                  />
+                  {errors.confirmNewPassword && (
+                    <p>{errors.confirmNewPassword.message}</p>
+                  )}
+                </InputWrapper>
+
+                <S.SubmitWrapper>
+                  <Button type="submit" variant="regular">
+                    Submeter
+                  </Button>
+                </S.SubmitWrapper>
+              </S.Form>
+              {/* <S.Form onSubmit={handleSubmit(handleUpdateUserInfo)}>
                 <S.FieldsWrapper>
                   <InputWrapper>
                     <label htmlFor="fullName">Nome completo*</label>
@@ -154,7 +227,7 @@ export const Profile = () => {
                       type="text"
                       name="zipCode"
                       id="zipCode"
-                      {...register("userAddress.zipCode", {
+                      {...register("address.zipCode", {
                         onBlur: (e) => {
                           const zipCode = e.target.value;
                           const isValidZip =
@@ -167,18 +240,18 @@ export const Profile = () => {
                               .then((response) => response.json())
                               .then(
                                 ({ bairro, localidade, logradouro, uf }) => {
-                                  setValue("userAddress.neighborhood", bairro);
-                                  setValue("userAddress.city", localidade);
-                                  setValue("userAddress.street", logradouro);
-                                  setValue("userAddress.state", uf);
+                                  setValue("address.neighborhood", bairro);
+                                  setValue("address.city", localidade);
+                                  setValue("address.street", logradouro);
+                                  setValue("address.state", uf);
                                 },
                               );
                           }
                         },
                       })}
                     />
-                    {errors.userAddress?.zipCode?.message && (
-                      <p>{errors.userAddress?.zipCode?.message}</p>
+                    {errors.address?.zipCode?.message && (
+                      <p>{errors.address?.zipCode?.message}</p>
                     )}
                   </InputWrapper>
                   <InputWrapper>
@@ -187,10 +260,10 @@ export const Profile = () => {
                       type="text"
                       name="street"
                       id="street"
-                      {...register("userAddress.street")}
+                      {...register("address.street")}
                     />
-                    {errors.userAddress?.street?.message && (
-                      <p>{errors.userAddress?.street.message}</p>
+                    {errors.address?.street?.message && (
+                      <p>{errors.address?.street.message}</p>
                     )}
                   </InputWrapper>
                   <InputWrapper>
@@ -199,10 +272,10 @@ export const Profile = () => {
                       type="text"
                       name="city"
                       id="city"
-                      {...register("userAddress.city")}
+                      {...register("address.city")}
                     />
-                    {errors.userAddress?.city?.message && (
-                      <p>{errors.userAddress?.city?.message}</p>
+                    {errors.address?.city?.message && (
+                      <p>{errors.address?.city?.message}</p>
                     )}
                   </InputWrapper>
                   <InputWrapper>
@@ -211,10 +284,10 @@ export const Profile = () => {
                       type="text"
                       name="state"
                       id="state"
-                      {...register("userAddress.state")}
+                      {...register("address.state")}
                     />
-                    {errors.userAddress?.state?.message && (
-                      <p>{errors.userAddress?.state?.message}</p>
+                    {errors.address?.state?.message && (
+                      <p>{errors.address?.state?.message}</p>
                     )}
                   </InputWrapper>
                   <InputWrapper>
@@ -223,7 +296,7 @@ export const Profile = () => {
                       type="text"
                       name="complement"
                       id="complement"
-                      {...register("userAddress.complement")}
+                      {...register("address.complement")}
                     />
                   </InputWrapper>
                   <InputWrapper>
@@ -232,10 +305,10 @@ export const Profile = () => {
                       type="text"
                       name="number"
                       id="number"
-                      {...register("userAddress.number")}
+                      {...register("address.number")}
                     />
-                    {errors.userAddress?.number?.message && (
-                      <p>{errors.userAddress?.number?.message}</p>
+                    {errors.address?.number?.message && (
+                      <p>{errors.address?.number?.message}</p>
                     )}
                   </InputWrapper>
                   <S.CustomInputWrapper>
@@ -244,10 +317,10 @@ export const Profile = () => {
                       type="text"
                       name="neighborhood"
                       id="neighborhood"
-                      {...register("userAddress.neighborhood")}
+                      {...register("address.neighborhood")}
                     />
-                    {errors.userAddress?.neighborhood?.message && (
-                      <p>{errors.userAddress?.neighborhood?.message}</p>
+                    {errors.address?.neighborhood?.message && (
+                      <p>{errors.address?.neighborhood?.message}</p>
                     )}
                   </S.CustomInputWrapper>
                 </S.FieldsWrapper>
@@ -260,7 +333,7 @@ export const Profile = () => {
                     Cancelar
                   </Button>
                 </S.ButtonsWrapper>
-              </S.Form>
+              </S.Form> */}
             </S.CustomDialogContent>
           </Dialog>
         </Container>

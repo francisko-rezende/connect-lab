@@ -43,7 +43,7 @@ export const Home = () => {
 
   useEffect(() => {
     queryClient.prefetchQuery("registeredDevices", getRegisteredDevices);
-    queryClient.prefetchQuery("user", () => getUser(userId));
+    queryClient.prefetchQuery("user", () => getUser());
   }, [userId]);
 
   const [selectedDeviceId, setSelectedDeviceId] = useState(null);
@@ -64,7 +64,7 @@ export const Home = () => {
       <div>
         <Toaster />
       </div>
-      {!weatherQuery.isLoading & !userQuery.isLoading ? (
+      {/* {!weatherQuery.isLoading & !userQuery.isLoading ? (
         <S.WeatherWrapper>
           <S.Temperature>
             {Math.round(weatherQuery.data.main.temp)} ºC
@@ -86,7 +86,7 @@ export const Home = () => {
         </S.WeatherWrapper>
       ) : (
         <p>Loading...</p>
-      )}
+      )} */}
       <S.FilterButtonsWrapper>
         {!locations.isLoading &&
           locations.data.map(({ description, _id }) => (
