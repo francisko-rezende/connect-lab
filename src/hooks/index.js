@@ -1,3 +1,5 @@
+export { useAddUserDeviceForm } from "./useAddUserDeviceForm";
+
 export { useAddUserDevice } from "./useAddUserDevice";
 export { useAuth } from "./useAuth";
 export { useCheckToken } from "./useCheckToken";
