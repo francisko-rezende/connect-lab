@@ -1,56 +1,37 @@
 import {
-  Button,
   Container,
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogTitle,
   Grid,
-  InputWrapper,
+  SearchBar,
+  DeviceDetailsCard,
+  AddDeviceDialog,
 } from "@components";
-import { yupResolver } from "@hookform/resolvers/yup";
 import * as S from "./Devices.styles";
 import {
-  useAddUserDevice,
   useCheckToken,
   useGlobalContext,
   useLocationOptions,
   useRegisteredDevices,
   useUserDevices,
+  useAddUserDeviceForm,
 } from "@hooks";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
+
 import { useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
-
-const newUserDeviceSchema = yup.object({
-  room: yup.string().required("Campo obrigatório"),
-  location: yup.string().required("Campo obrigatório"),
-});
-
-const getDelay = () => Math.random() * (20 - 5) + 5;
+import { Toaster } from "react-hot-toast";
 
 export const Devices = () => {
   const devices = useRegisteredDevices();
-  const addUserDevice = useAddUserDevice();
   const { userId } = useGlobalContext();
   useUserDevices(userId);
   useCheckToken();
   const locations = useLocationOptions();
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    reset,
-    formState: { errors },
-  } = useForm({ resolver: yupResolver(newUserDeviceSchema) });
-
-  setValue("userId", userId);
-
   const [search, setSearch] = useState("");
   const [open, setIsOpen] = useState(null);
   const [selectedDevice, setSelectedDevice] = useState(null);
+  const { handleLinkDevice, register, setValue } = useAddUserDeviceForm({
+    userId,
+    setIsOpen,
+  });
 
   const filteredDevices = search
     ? devices.data.filter(({ name }) =>
@@ -58,108 +39,40 @@ export const Devices = () => {
       )
     : devices.data;
 
+  const handleSelectDevice = (name, _id) => {
+    setSelectedDevice(name);
+    setIsOpen(true);
+    setValue("deviceId", _id);
+  };
+
   return (
     <Container>
       <S.H2>Devices</S.H2>
-      <S.SearchBarWrapper>
-        <S.Label htmlFor="search">Nome do dispositivo</S.Label>
-        <S.Search
-          type="search"
-          id="search"
-          placeholder="Buscar pelo nome do dispositivo"
-          onChange={(ev) => {
-            const searchTerm = ev.target.value;
-            setSearch(searchTerm);
-          }}
-        />
-      </S.SearchBarWrapper>
+      <SearchBar setSearch={setSearch} />
       <Grid>
         {devices.isLoading ? (
           <p>Carregando</p>
         ) : (
           filteredDevices.map(({ name, _id, photoUrl }) => (
-            <S.Li key={_id}>
-              <S.ImgWrapper>
-                <img src={photoUrl} alt={name} />
-              </S.ImgWrapper>
-              {name}{" "}
-              <Button
-                variant="regular"
-                onClick={() => {
-                  setSelectedDevice(name);
-                  setIsOpen(true);
-                  setValue("deviceId", _id);
-                }}
-              >
-                Adicionar
-              </Button>
-            </S.Li>
+            <DeviceDetailsCard
+              key={_id}
+              name={name}
+              _id={_id}
+              photoUrl={photoUrl}
+              handleSelectDevice={() => handleSelectDevice(name, _id)}
+            />
           ))
         )}
       </Grid>
       <Toaster />
-
-      <Dialog open={open} onOpenChange={setIsOpen}>
-        <DialogContent>
-          <S.ContentWrapper>
-            <DialogTitle>{selectedDevice}</DialogTitle>
-            <S.Form
-              onSubmit={handleSubmit((data) => {
-                toast.loading("Adicionando device");
-                // console.log(data);
-                // toast.dismiss();
-                addUserDevice.mutate({ data, setIsOpen, reset, toast });
-                // setTimeout(
-                //   () => addUserDevice.mutate({ data, setIsOpen, reset, toast }),
-                //   getDelay() * 1000,
-                // );
-              })}
-            >
-              <input {...register("userId")} style={{ display: "none" }} />
-              <input {...register("deviceId")} style={{ display: "none" }} />
-              <InputWrapper>
-                <label htmlFor="room">Quarto</label>
-                <input
-                  type="text"
-                  name="room"
-                  id="room"
-                  {...register("room")}
-                />
-              </InputWrapper>
-
-              <InputWrapper>
-                <label htmlFor="location">Local</label>
-                <select
-                  defaultValue={""}
-                  name="location"
-                  id="location"
-                  {...register("location")}
-                >
-                  <option value="" disabled>
-                    Selecione o local
-                  </option>
-                  {!locations.isLoading &&
-                    locations.data.map((location) => (
-                      <option
-                        key={location.locationId}
-                        value={location.locationId}
-                      >
-                        {location.description}
-                      </option>
-                    ))}
-                </select>
-              </InputWrapper>
-
-              <S.ButtonsWrapper>
-                <DialogClose asChild>
-                  <Button variant="underlined">Cancelar</Button>
-                </DialogClose>
-                <Button variant="regular">Submeter</Button>
-              </S.ButtonsWrapper>
-            </S.Form>
-          </S.ContentWrapper>
-        </DialogContent>
-      </Dialog>
+      <AddDeviceDialog
+        register={register}
+        open={open}
+        setIsOpen={setIsOpen}
+        selectedDevice={selectedDevice}
+        locations={locations}
+        onSubmit={handleLinkDevice}
+      />
     </Container>
   );
 };
