@@ -1,9 +1,10 @@
-export { getWeatherData } from "./getWeatherData";
-export { getLocationOptions } from "./getLocationOptions";
-export { updateProfile } from "./updateProfile";
-export { toggleDeviceStatus } from "./toggleDeviceStatus";
 export { addUserDevice } from "./addUserDevice";
+export { getAddressInfoFromZip } from "./getAddressInfoFromZip";
+export { getLocationOptions } from "./getLocationOptions";
 export { getRegisteredDevices } from "./getRegisteredDevices";
 export { getUser } from "./getUser";
-export { removeDevice } from "./removeDevice";
 export { getUserDevices } from "./getUserDevices";
+export { getWeatherData } from "./getWeatherData";
+export { removeDevice } from "./removeDevice";
+export { toggleDeviceStatus } from "./toggleDeviceStatus";
+export { updateProfile } from "./updateProfile";
