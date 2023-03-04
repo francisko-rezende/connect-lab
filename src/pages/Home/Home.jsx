@@ -28,9 +28,9 @@ export const Home = () => {
   const locations = useLocationOptions();
 
   const userQuery = useUser(userId);
-  const weatherQuery = useWeatherData(userQuery.data?.userAddress?.city);
-  queryClient.setQueryDefaults(["weather", userQuery.data?.userAddress?.city], {
-    enabled: !!userQuery.data?.userAddress?.city,
+  const weatherQuery = useWeatherData(userQuery.data?.address?.city);
+  queryClient.setQueryDefaults(["weather", userQuery.data?.address?.city], {
+    enabled: !!userQuery.data?.address?.city,
   });
   const userDevicesQuery = useUserDevices(userId);
   const removeDevice = useRemoveUserDevice();
@@ -64,7 +64,7 @@ export const Home = () => {
       <div>
         <Toaster />
       </div>
-      {/* {!weatherQuery.isLoading & !userQuery.isLoading ? (
+      {!weatherQuery.isLoading & !userQuery.isLoading & !!weatherQuery.data ? (
         <S.WeatherWrapper>
           <S.Temperature>
             {Math.round(weatherQuery.data.main.temp)} ºC
@@ -77,8 +77,7 @@ export const Home = () => {
             alt={`tempo ${weatherQuery.data.weather[0].description}`}
           />
           <p>
-            {userQuery.data.userAddress.city},{" "}
-            {userQuery.data.userAddress.state}
+            {userQuery.data.address.city}, {userQuery.data.address.state}
           </p>
           <p>
             Sensação térmica: {Math.round(weatherQuery.data.main.feels_like)}ºC{" "}
@@ -86,7 +85,7 @@ export const Home = () => {
         </S.WeatherWrapper>
       ) : (
         <p>Loading...</p>
-      )} */}
+      )}
       <S.FilterButtonsWrapper>
         {!locations.isLoading &&
           locations.data.map(({ description, _id }) => (
