@@ -1,6 +1,6 @@
 import * as S from "./SignInSection.styles";
-import { Container, InputWrapper, Button } from "@components";
-import { useSignIn } from "hooks/useSignIn";
+import { Container, Button, TextField } from "@components";
+import { useSignIn } from "@hooks";
 
 export const SignInSection = () => {
   const { error, errors, handleLogin, handleSubmit, register } = useSignIn();
@@ -11,26 +11,19 @@ export const SignInSection = () => {
         <S.Section>
           <h2>Acessar</h2>
           <S.SignInForm onSubmit={handleSubmit(handleLogin)}>
-            <InputWrapper>
-              <label htmlFor="email">E-mail</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                {...register("email")}
-              />
-              {errors.email && <p>{errors.email.message}</p>}
-            </InputWrapper>
-            <InputWrapper>
-              <label htmlFor="password">Senha</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                {...register("password")}
-              />
-              {errors.password && <p>{errors.password.message}</p>}
-            </InputWrapper>
+            <TextField
+              errorMessage={errors.email?.message}
+              name="email"
+              label="E-mail"
+              {...register("email")}
+            />
+            <TextField
+              errorMessage={errors.password?.message}
+              name="password"
+              type="password"
+              label="Senha"
+              {...register("password")}
+            />
             {error && <S.ErrorParagraph>{error}</S.ErrorParagraph>}
             <S.SubmitWrapper>
               <Button type="submit" variant="regular">
