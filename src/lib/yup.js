@@ -13,6 +13,11 @@ export const validatorRegex = {
   zipCode: /[0-9]{5}-[0-9]{3}/,
 };
 
+export const newUserDeviceSchema = yup.object({
+  room: yup.string().required("Campo obrigatório"),
+  location: yup.string().required("Campo obrigatório"),
+});
+
 const addressSchema = yup.object({
   zipCode: yup
     .string()
@@ -26,7 +31,7 @@ const addressSchema = yup.object({
   neighborhood: yup.string().required(errorMessages.required),
   city: yup.string().required(errorMessages.required),
   state: yup.string().required(errorMessages.required),
-  // complement: yup.string(),
+  complement: yup.string(),
 });
 
 export const formSchema = yup.object({

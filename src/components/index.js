@@ -1,3 +1,6 @@
+export { AddDeviceDialog } from "./AddDeviceDialog";
+export { DeviceDetailsCard } from "./DeviceDetailsCard";
+export { SearchBar } from "./SearchBar";
 export { DeviceDetailsDialog } from "./DeviceDetailsDialog";
 export { DeviceCard } from "./DeviceCard";
 export { WeatherWidget } from "./WeatherWidget";
@@ -22,3 +25,4 @@ export {
   DialogTitle,
   DialogTrigger,
 } from "./Dialog";
+

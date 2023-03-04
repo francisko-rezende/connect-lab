@@ -1,0 +1,2 @@
+export { DeviceDetailsCard } from "./DeviceDetailsCard";
+
