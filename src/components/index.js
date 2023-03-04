@@ -1,3 +1,4 @@
+export { TextField } from "./TextField";
 export { MoonIcon } from "./MoonIcon";
 export { SunIcon } from "./SunIcon";
 export { StatusIcon } from "./StatusIcon";
@@ -18,3 +19,4 @@ export {
   DialogTitle,
   DialogTrigger,
 } from "./Dialog";
+
