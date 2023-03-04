@@ -49,18 +49,19 @@ export const Profile = () => {
   const user = userQuery.data;
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isUpdateProfileDialogOpen, setIsUpdateProfileDialogOpen] = useState(false);
 
-  // useEffect(() => {
-  //   if (!userQuery.isLoading) {
-  //     setValue("fullName", user.fullName);
-  //     setValue("photoUrl", user.photoUrl);
-  //     setValue("email", user.email);
-  //     setValue("password", user.password);
-  //     setValue("phone", user.phone);
-  //     setValue("address", user.address);
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [userQuery.isLoading]);
+  useEffect(() => {
+    if (!userQuery.isLoading) {
+      setValue("fullName", user.fullName);
+      setValue("photoUrl", user.photoUrl);
+      setValue("email", user.email);
+      setValue("password", user.password);
+      setValue("phone", user.phone);
+      setValue("address", user.address);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userQuery.isLoading]);
 
   const updateProfile = useUpdateProfile();
 
@@ -113,6 +114,9 @@ export const Profile = () => {
               </p>
             </div>
             <S.ButtonsWrapper>
+              <Button variant="regular" onClick={() => setIsUpdateProfileDialogOpen(true)}>
+                Editar perfil
+              </Button>
               <Button variant="regular" onClick={() => setIsDialogOpen(true)}>
                 Mudar senha
               </Button>
@@ -179,7 +183,13 @@ export const Profile = () => {
                   </Button>
                 </S.SubmitWrapper>
               </S.Form>
-              {/* <S.Form onSubmit={handleSubmit(handleUpdateUserInfo)}>
+            </S.CustomDialogContent>
+          </Dialog>
+          <Dialog open={isUpdateProfileDialogOpen} onOpenChange={setIsUpdateProfileDialogOpen}>
+            <S.CustomDialogContent>
+              <S.CustomDialogTitle>Meu Perfil</S.CustomDialogTitle>
+
+              <S.Form onSubmit={handleSubmit(handleUpdateUserInfo)}>
                 <S.FieldsWrapper>
                   <InputWrapper>
                     <label htmlFor="fullName">Nome completo*</label>
@@ -328,12 +338,12 @@ export const Profile = () => {
                   <Button variant="regular">Salvar</Button>
                   <Button
                     variant="underlined"
-                    onClick={() => setIsDialogOpen(false)}
+                    onClick={() => setIsUpdateProfileDialogOpen(false)}
                   >
                     Cancelar
                   </Button>
                 </S.ButtonsWrapper>
-              </S.Form> */}
+              </S.Form>
             </S.CustomDialogContent>
           </Dialog>
         </Container>
