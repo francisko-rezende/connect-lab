@@ -10,8 +10,6 @@ import { useAuth } from "./useAuth";
 import { useGlobalContext } from "./useGlobalContext";
 
 export const useSignIn = () => {
-
-
   const { setToken } = useAuth();
   const navigate = useNavigate();
   const { setUserId } = useGlobalContext();
