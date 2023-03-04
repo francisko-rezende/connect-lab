@@ -114,5 +114,6 @@ export const FilterButton = styled.button`
 export const FilterButtonsWrapper = styled.div`
   margin-top: 32px;
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 `;
