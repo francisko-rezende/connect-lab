@@ -1,0 +1,2 @@
+export { DeviceDetailsDialog } from "./DeviceDetailsDialog";
+
