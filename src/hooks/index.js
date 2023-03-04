@@ -1,3 +1,4 @@
+export { useRegistrationForm } from "./useRegistrationForm";
 export { useWeatherData } from "./useWeatherData";
 export { useLocationOptions } from "./useLocationOptions";
 export { useCheckToken } from "./useCheckToken";
