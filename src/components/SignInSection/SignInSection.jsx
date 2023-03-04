@@ -1,50 +1,9 @@
-import { getUserDevices, getWeatherData } from "@api";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useAuth, useGlobalContext } from "@hooks";
-import { axiosInstance } from "@lib/axios";
-import { queryClient } from "@lib/react-query";
-import { userSchema } from "@lib/yup";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import * as S from "./SignInSection.styles";
-import { Container, InputWrapper, Button } from "@components";
+import { Container, Button, TextField } from "@components";
+import { useSignIn } from "@hooks";
 
 export const SignInSection = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({ resolver: yupResolver(userSchema) });
-  const { setToken } = useAuth();
-  const navigate = useNavigate();
-  const { setUserId } = useGlobalContext();
-
-  const [error, setError] = useState("");
-
-  const handleLogin = async (data) => {
-    try {
-      const res = await axiosInstance.post("auth/login", data);
-      console.log(res);
-      const { token, user } = res.data;
-      const userId = user._id;
-      const userCity = user.userAddress.city;
-
-      queryClient.setQueryData("user", user);
-
-      queryClient.prefetchQuery(["weather", userCity], () =>
-        getWeatherData(userCity),
-      );
-      queryClient.prefetchQuery(["useDevices"], () => getUserDevices(userId));
-
-      setUserId(userId);
-      setToken(token);
-
-      navigate("/");
-    } catch (error) {
-      setError("Email e/ou senha incorretos");
-    }
-  };
+  const { error, errors, handleLogin, handleSubmit, register } = useSignIn();
 
   return (
     <Container>
@@ -52,26 +11,19 @@ export const SignInSection = () => {
         <S.Section>
           <h2>Acessar</h2>
           <S.SignInForm onSubmit={handleSubmit(handleLogin)}>
-            <InputWrapper>
-              <label htmlFor="email">E-mail</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                {...register("email")}
-              />
-              {errors.email && <p>{errors.email.message}</p>}
-            </InputWrapper>
-            <InputWrapper>
-              <label htmlFor="password">Senha</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                {...register("password")}
-              />
-              {errors.password && <p>{errors.password.message}</p>}
-            </InputWrapper>
+            <TextField
+              errorMessage={errors.email?.message}
+              name="email"
+              label="E-mail"
+              {...register("email")}
+            />
+            <TextField
+              errorMessage={errors.password?.message}
+              name="password"
+              type="password"
+              label="Senha"
+              {...register("password")}
+            />
             {error && <S.ErrorParagraph>{error}</S.ErrorParagraph>}
             <S.SubmitWrapper>
               <Button type="submit" variant="regular">
