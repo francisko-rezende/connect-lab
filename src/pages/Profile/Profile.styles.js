@@ -1,6 +1,16 @@
 import { Avatar, DialogContent, DialogTitle, InputWrapper } from "@components";
 import styled, { css } from "styled-components";
 
+export const SubmitWrapper = styled.div`
+  margin-top: 16px;
+  gap: 16px;
+  display: grid;
+  grid-template-columns: minmax(min-content, 200px);
+  place-self: center;
+  justify-content: center;
+  width: 100%;
+`;
+
 export const UserWrapper = styled.div`
   place-items: center;
   gap: 40px;
@@ -71,6 +81,7 @@ export const Form = styled.form`
   place-items: center;
   gap: 32px;
   padding: 20px;
+  overflow-x: auto;
   ${({ theme }) => css`
     background-color: ${theme.colors.gray.gray01};
     border-radius: ${theme.borderRadius};
@@ -82,13 +93,23 @@ export const FieldsWrapper = styled.div`
   grid-template-columns: repeat(2, 1fr);
   row-gap: 28px;
   column-gap: 16px;
+
+  @media (max-width: 620px) {
+    grid-template-columns: 1fr;
+  }
+  
 `;
 
 export const CustomInputWrapper = styled(InputWrapper)`
   grid-column: span 2;
+
+    @media (max-width: 620px) {
+    grid-column: unset;
+  }
 `;
 
 export const CustomDialogContent = styled(DialogContent)`
+overflow-y: auto;
   max-width: fit-content;
   max-height: 90vh;
   background-color: ${({ theme }) => theme.colors.gray07};

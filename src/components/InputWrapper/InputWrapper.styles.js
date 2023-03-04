@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: minmax(auto, 500px);
+  grid-template-columns: min(100%, 500px);
   gap: 4px;
   position: relative;
 

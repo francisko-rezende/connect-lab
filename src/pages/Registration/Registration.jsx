@@ -17,20 +17,20 @@ export const Registration = () => {
   } = useForm({
     defaultValues: {
       address: {
-        state: "MG",
-        city: "Juiz de Fora",
-        neighborhood: "São Mateus",
+        state: "RJ",
+        city: "Rio de Janeiro",
+        neighborhood: "Vale dos Puxadores de Ferro",
         number: 17,
-        street: "Rua Melo Franco",
-        zipCode: "36026-000",
+        street: "Rua Felipe Franco",
+        zipCode: "28495-000",
         complement: "",
       },
       phone: "(35) 9 9828-0000",
       photoUrl: "https://duck.com",
-      fullName: "Teste 1",
+      fullName: "Léo Stronda",
       confirmPassword: "VemMonstro",
       password: "VemMonstro",
-      email: "teste1@mail.com",
+      email: "leo@stronda.com",
     },
     resolver: yupResolver(formSchema),
   });
