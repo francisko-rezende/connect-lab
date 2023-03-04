@@ -1,3 +1,6 @@
+export { DeviceDetailsDialog } from "./DeviceDetailsDialog";
+export { DeviceCard } from "./DeviceCard";
+export { WeatherWidget } from "./WeatherWidget";
 export { TextField } from "./TextField";
 export { MoonIcon } from "./MoonIcon";
 export { SunIcon } from "./SunIcon";
@@ -19,4 +22,3 @@ export {
   DialogTitle,
   DialogTrigger,
 } from "./Dialog";
-
