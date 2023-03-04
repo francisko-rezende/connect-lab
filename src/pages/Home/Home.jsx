@@ -3,10 +3,10 @@ import { getRegisteredDevices, getUser } from "@api";
 import {
   Button,
   Container,
-  Dialog,
-  DialogContent,
   Grid,
-  StatusIcon,
+  WeatherWidget,
+  DeviceCard,
+  DeviceDetailsDialog,
 } from "@components";
 import * as S from "./Home.styles";
 import {
@@ -28,22 +28,22 @@ export const Home = () => {
   const locations = useLocationOptions();
 
   const userQuery = useUser(userId);
-  const weatherQuery = useWeatherData(userQuery.data?.address?.city);
   queryClient.setQueryDefaults(["weather", userQuery.data?.address?.city], {
     enabled: !!userQuery.data?.address?.city,
   });
   const userDevicesQuery = useUserDevices(userId);
   const removeDevice = useRemoveUserDevice();
   const toggleDeviceStatus = useToggleDeviceStatus();
-  const [isDialogOpen, setIsDialogOpen] = useState(true);
 
+  const [isDialogOpen, setIsDialogOpen] = useState(true);
   const [locationToShow, setLocationToShow] = useState(null);
+  const weatherQuery = useWeatherData(userQuery.data?.address?.city);
 
   useCheckToken();
 
   useEffect(() => {
     queryClient.prefetchQuery("registeredDevices", getRegisteredDevices);
-    queryClient.prefetchQuery("user", () => getUser());
+    queryClient.prefetchQuery("user", getUser);
   }, [userId]);
 
   const [selectedDeviceId, setSelectedDeviceId] = useState(null);
@@ -59,44 +59,54 @@ export const Home = () => {
     selectedDeviceId,
   ]);
 
+  const handleCardClick = (item) => {
+    setSelectedDeviceId(item._id);
+    setIsDialogOpen(true);
+  };
+
+  const handleToggleDeviceStatus = (item) => {
+    toggleDeviceStatus.mutate({
+      deviceId: item._id,
+      deviceStatus: item.is_on,
+    });
+  };
+
+  const handleRemoveDevice = () =>
+    toast.promise(
+      removeDevice.mutateAsync({
+        id: selectedDevice._id,
+        setIsDialogOpen,
+      }),
+      {
+        loading: "Removendo...",
+        success: <b>Remoção bem sucedida!</b>,
+        error: <b>Não foi possível remover device.</b>,
+      },
+    );
+
+  console.log(selectedDevice);
+
   return (
     <Container>
-      <div>
-        <Toaster />
-      </div>
+      <Toaster />
       {!weatherQuery.isLoading & !userQuery.isLoading & !!weatherQuery.data ? (
-        <S.WeatherWrapper>
-          <S.Temperature>
-            {Math.round(weatherQuery.data.main.temp)} ºC
-          </S.Temperature>
-          <p style={{ textTransform: "capitalize" }}>
-            {weatherQuery.data.weather[0].description}
-          </p>
-          <img
-            src={`https://openweathermap.org/img/wn/${weatherQuery.data.weather[0].icon}@2x.png`}
-            alt={`tempo ${weatherQuery.data.weather[0].description}`}
-          />
-          <p>
-            {userQuery.data.address.city}, {userQuery.data.address.state}
-          </p>
-          <p>
-            Sensação térmica: {Math.round(weatherQuery.data.main.feels_like)}ºC{" "}
-          </p>
-        </S.WeatherWrapper>
+        <WeatherWidget weatherQuery={weatherQuery} userQuery={userQuery} />
       ) : (
         <p>Loading...</p>
       )}
       <S.FilterButtonsWrapper>
         {!locations.isLoading &&
-          locations.data.map(({ description, _id }) => (
-            <Button
-              variant="regular"
-              key={_id}
-              onClick={() => setLocationToShow(description)}
-            >
-              {description}
-            </Button>
-          ))}
+          locations.data.map(({ description, locationId }) => {
+            return (
+              <Button
+                variant="regular"
+                key={locationId}
+                onClick={() => setLocationToShow(description)}
+              >
+                {description}
+              </Button>
+            );
+          })}
         <Button variant="regular" onClick={() => setLocationToShow(null)}>
           Todos
         </Button>
@@ -107,103 +117,29 @@ export const Home = () => {
         ) : (
           filteredDevices.map((item) => {
             return (
-              <li key={item._id}>
-                <S.DeviceCard
-                  role="button"
-                  onClick={() => {
-                    setSelectedDeviceId(item._id);
-                    setIsDialogOpen(true);
-                  }}
-                >
-                  <S.ImgWrapper>
-                    <img src={item.device.photoUrl} alt={item.device.name} />
-                  </S.ImgWrapper>
-                  <S.DeviceInfoWrapper>
-                    <S.DeviceName>{item.device.name}</S.DeviceName>
-                    <S.DeviceInfoParagraph>
-                      {item.local.description} | {item.room} |{" "}
-                      {item.is_on ? "ON" : "OFF"}
-                    </S.DeviceInfoParagraph>
-                  </S.DeviceInfoWrapper>
-                  <S.StatusButtonWrapper
-                    role="button"
-                    onClick={(ev) => {
-                      ev.stopPropagation();
-                      toggleDeviceStatus.mutate({
-                        deviceId: item._id,
-                        deviceStatus: item.is_on,
-                      });
-                    }}
-                  >
-                    <StatusIcon isOn={item.is_on} />
-                  </S.StatusButtonWrapper>
-                </S.DeviceCard>
-              </li>
+              <DeviceCard
+                key={item._id}
+                handleCardClick={() => handleCardClick(item)}
+                handleToggleDeviceStatus={(e) => {
+                  e.stopPropagation();
+                  handleToggleDeviceStatus(item);
+                }}
+                item={item}
+              />
             );
           })
         )}
       </Grid>
-
       {selectedDevice && (
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent>
-            <S.ContentWrapper>
-              <S.CustomDialogTitle>
-                {selectedDevice.device.name}
-              </S.CustomDialogTitle>
-              <S.H3>{selectedDevice.device.madeBy}</S.H3>
-              <S.ImgWrapper>
-                <img
-                  src={selectedDevice.device.photoUrl}
-                  alt={selectedDevice.device.name}
-                />
-              </S.ImgWrapper>
-
-              <S.StatusWrapper>
-                <S.Status>
-                  Dispositivo {selectedDevice.is_on ? "Ligado" : "Desligado"}
-                </S.Status>
-                <S.StatusButtonWrapper
-                  role="button"
-                  onClick={() => {
-                    toggleDeviceStatus.mutate({
-                      deviceId: selectedDevice._id,
-                      deviceStatus: selectedDevice.is_on,
-                    });
-                  }}
-                >
-                  <StatusIcon isOn={selectedDevice.is_on} />
-                </S.StatusButtonWrapper>
-              </S.StatusWrapper>
-
-              <S.H4>Informações do dispositivo</S.H4>
-              <S.DetailsWrapper>
-                <p>ID virtual: {selectedDevice.device.info.virtual_id}</p>
-                <p>Endereço IP: {selectedDevice.device.info.ip_address}</p>
-                <p>Endereço MAC: {selectedDevice.device.info.mac_address}</p>
-                <p>Força do sinal: {selectedDevice.device.info.signal}</p>
-              </S.DetailsWrapper>
-              <Button
-                variant="regular"
-                onClick={() =>
-                  toast.promise(
-                    removeDevice.mutateAsync({
-                      id: selectedDevice._id,
-                      setIsDialogOpen,
-                    }),
-                    {
-                      loading: "Removendo...",
-                      success: <b>Remoção bem sucedida!</b>,
-                      error: <b>Não foi possível remover device.</b>,
-                    },
-                  )
-                }
-              >
-                Remover
-              </Button>
-            </S.ContentWrapper>
-          </DialogContent>
-        </Dialog>
+        <DeviceDetailsDialog
+          handleRemoveDevice={handleRemoveDevice}
+          isDialogOpen={isDialogOpen}
+          selectedDevice={selectedDevice}
+          setIsDialogOpen={setIsDialogOpen}
+          handleToggleDeviceStatus={() =>
+            handleToggleDeviceStatus(selectedDevice)
+          }
+        />
       )}
     </Container>
   );
